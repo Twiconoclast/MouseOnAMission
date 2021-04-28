@@ -1,0 +1,143 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 96.5vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #665355;
+}
+
+h2{
+    background-color: #665355;
+    color: #A9A8A6;
+    /* width: 15%; */
+    text-align: center;
+    margin-top: 10px;
+}
+
+#timer-holder {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -1116%);
+    width: 600px;
+    height: 25px;
+    padding: 0 5px;
+    margin: 0 0;
+}
+
+#timer {
+    /* position: absolute; */
+    height: 25px;
+    width: 60px;
+    background-color: black;
+    color: whitesmoke;
+    z-index: 10;
+    /* top: 25%;
+    left: 66.5%; */
+    /* transform: translate(-50%, -50%); */
+    /* font-family: sans-serif; */
+    display: inline-block;
+    border-radius: 2px;
+    transition: all .3s ease-out;
+}
+
+p {
+    background-color: #665355;
+    color: #A9A8A6;
+    /* width: 15%; */
+    text-align: center;
+}
+
+.restart-instruction {
+    width: 15%;
+}
+
+footer {
+    align-self: baseline;
+    background-color: #665355;
+    color: #A9A8A6;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+    color: #A9A8A6;
+}
+
+.controls {
+    position: absolute;
+    z-index: 10;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.controls, select, option {
+    font-size: 25px;
+}
+
+/* .floor {
+    position: absolute;
+    top: -200%;
+    left: -200%;
+    width: 500%;
+    height: 500%;
+    background-image: url(tiles_scaled.jpg);
+} */
+
+#cage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 450px;
+    width: 600px;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background-image: url(tiles_scaled.jpg);
+}
+
+#talks-to-player {
+    opacity: 0;
+    background-color: blanchedalmond;
+    border-radius: 5px;
+    border: 2px solid brown;
+}
+
+#talks-to-player.revealed {
+    position:absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    z-index: 15;
+    min-height: 50px;
+    /* max-height: 130px; */
+    padding-top: 15px;
+    padding-bottom: 15px;
+    width: fit-content;
+    max-width: 550px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#talks-to-player.first-box {
+    top: 50%;
+}
+
+#talks-to-player span {
+    opacity: 0;
+}
+
+#talks-to-player span.revealed {
+    opacity: 1;
+}
