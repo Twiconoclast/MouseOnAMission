@@ -21,15 +21,10 @@ function tick() {
     let numberMinutes = Number(timerMinutes)
     
     const _tick = setInterval(() => {
-        console.log(timeLeft)
-        console.log(dialogShowing)
-        if (timeLeft > 0 && dialogShowing === false) {
+        if (timeLeft > 0 && !dialogShowing && gameRunning) {
             if (numberSeconds > 0) {
-                console.log(numberSeconds)
-                console.log('more than zero')
                 numberSeconds -= 1
             } else {
-                console.log(numberSeconds)
                 numberSeconds = 59
                 numberMinutes -= 1
             }
@@ -37,6 +32,7 @@ function tick() {
             timeLeft -= 1000
         } else if (timeLeft === 0){
             timeOut = true;
+            gameRunning = false;
             clearInterval(_tick)
         }
     }, 1000)
@@ -67,7 +63,6 @@ window.addEventListener('keydown', function(e) {
         }
     }
 )
-// const dropdown = document.getElementById('animations')
 
 const keys = []
 
@@ -226,7 +221,6 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH)
 }
 
-
 window.addEventListener('keydown', function(e) {
     keys[e.key] = true;
     moving = true
@@ -255,14 +249,21 @@ function movePlayer() {
         }
         moving = true;
     } else if (keys['ArrowLeft'] && playerX > 25){
+        console.log(playerX)
+        console.log(tubX+130)
         if (playerX > tubX+130) {
             playerX -= playerSpeed;
             playerState = 'left';
             moving = true;
-        } else if (playerX < tubX+130 && playerY < tubY-30) {
+        } else if (playerX < tubX+126 && playerY < tubY-30) {
             playerX -= playerSpeed;
             playerState = 'left';
             moving = true;
+        } else if ((playerX === tubX+126 && playerY >= tubY-30)) {
+            if (!dialogShowing) {
+                appendtoDialog(toSayLevelOne.water[0].string)
+                toggleDialog()
+            }
         }
     } else if (keys['ArrowRight'] && playerX < 530){
         playerX += playerSpeed;
