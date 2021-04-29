@@ -2,11 +2,15 @@ let playerState = 'down';
 let gameRunning = false;
 let dialogShowing = true;
 let timer = document.getElementById('timer');
+let skipButton = document.getElementById('skip-button');
 let timeLeft = 300000;
 let timerMinutes = '05'
 let timerSeconds = '00'
 timer.innerHTML = timerMinutes + ':' + timerSeconds
 let timeOut = false
+let multibox = false
+let hasNeedle = false
+let clearLevelOne = false
 
 function numberToString(num) {
     if (num < 10) {
@@ -15,6 +19,12 @@ function numberToString(num) {
         return num.toString()
     }
 }
+
+skipButton.addEventListener('click', ()=> {
+    toggleDialog()
+    skipButton.classList.remove("revealed")
+    multibox = false
+})
 
 function tick() {
     let numberSeconds = Number(timerSeconds)
@@ -40,25 +50,28 @@ function tick() {
 
 window.addEventListener('keydown', function(e) {
     dialog.classList.remove("first-box")
-    while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-    if (!gameRunning) {
+    if (!gameRunning && !clearLevelOne) {
+        tick()
+        while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
         gameRunning = true
         counter = 0
         appendtoDialog(toSayLevelOne.opening[0].string)
+        multibox = true
+        skipButton.classList.add("revealed")
         const open = setInterval(() => {
-                if (counter === 2) clearInterval(open);
+            console.log(multibox)
+                if (counter === 2 || multibox === false) clearInterval(open);
                 setTimeout(() => {
-                    while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                    if (dialogShowing && multibox) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
                 }, 3000)
                 setTimeout(() => {
-                    appendtoDialog(toSayLevelOne.opening[counter].string)
+                    if (multibox) appendtoDialog(toSayLevelOne.opening[counter].string)
                 }, 3000)
                 counter++
             }, 4000)
             setTimeout(() => {
-                while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                toggleDialog()
-                tick()
+                if (dialogShowing && multibox) toggleDialog()
+                skipButton.classList.remove("revealed")
             }, 22000)
         }
     }
@@ -72,6 +85,7 @@ function toggleDialog() {
         dialogShowing = true
     } else {
         dialog.classList.remove("revealed")
+        while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
         dialogShowing = false
     }
 }
@@ -130,7 +144,6 @@ function appendtoDialog(str) {
     })
     revealOneCharacter(openingCharacters)
 }
-// while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
 
 function revealOneCharacter(list) {
     let next = list.splice(0, 1)[0];
@@ -165,8 +178,7 @@ images.bowl = new Image();
 images.bowl.src = 'bowl.PNG'
 images.hay = new Image();
 images.hay.src = 'hay.PNG'
-// images.wire = new Image();
-// images.wire.src = 'wire.PNG'
+
 const playerWidth = 50;
 const playerHeight = 50;
 
@@ -231,49 +243,136 @@ window.addEventListener('keyup', function(e) {
     moving = false
 })
 
-function movePlayer() {
-    if(keys['ArrowUp'] && playerY > 25){
-        playerY -= playerSpeed;
-        playerState = 'up';
-        moving = true;
-    } else if (keys['ArrowDown']){
-        if (playerY === (tubY-24) && playerX <= tubX+115) {
-            playerY += playerSpeed / 4;
-            playerState = 'down';
-            moving = true;
-            tubY += playerSpeed / 4;
-        } else if (playerY < 360) {
-            playerY += playerSpeed;
-            playerState = 'down';
-            moving = true;
-        }
-        moving = true;
-    } else if (keys['ArrowLeft'] && playerX > 25){
-        console.log(playerX)
-        console.log(tubX+130)
-        if (playerX > tubX+130) {
-            playerX -= playerSpeed;
-            playerState = 'left';
-            moving = true;
-        } else if (playerX < tubX+126 && playerY < tubY-30) {
-            playerX -= playerSpeed;
-            playerState = 'left';
-            moving = true;
-        } else if ((playerX === tubX+126 && playerY >= tubY-30)) {
-            if (!dialogShowing) {
-                appendtoDialog(toSayLevelOne.water[0].string)
+let alreadyHere = false
+
+function checkStep() {
+
+    if (playerY <= 110 && playerY >= 42 && playerX >=24 && playerX <= 96 && !alreadyHere) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelOne.food[0].string)
+            toggleDialog()
+
+            setTimeout(() => {
                 toggleDialog()
-            }
+            }, 4000)
         }
-    } else if (keys['ArrowRight'] && playerX < 530){
-        playerX += playerSpeed;
-        playerState = 'right';
-        moving = true;
+    } else if (playerY <= 110 && playerY >= 42 && playerX >=24 && playerX <= 96) {
+        alreadyHere = true
+    } else if (playerY <= 110 && playerY >= 68 && playerX >=360 && playerX <= 474 && !alreadyHere && !hasNeedle) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelOne.haystack[0].string)
+            toggleDialog()
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                }, 4000)
+            setTimeout(() => {
+                appendtoDialog(toSayLevelOne.haystack[1].string)
+            }, 4000)
+            setTimeout(() => {
+                toggleDialog()
+            }, 8000)
+        }
+        hasNeedle = true
+    } else if (playerY <= 110 && playerY >= 68 && playerX >=360 && playerX <= 474) {
+        alreadyHere = true
+     } else if (playerY <= 248 && playerY >= 200 && playerX >=525 && playerX && !alreadyHere && !hasNeedle) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelOne.cageNoNeedle[0].string)
+            toggleDialog()
+
+            setTimeout(() => {
+                toggleDialog()
+            }, 4000)
+        }
+    } else if (playerY <= 248 && playerY >= 200 && playerX >=525 && !alreadyHere && hasNeedle) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelOne.cageWithNeedle[0].string)
+            toggleDialog()
+
+            setTimeout(() => {
+                toggleDialog()
+            }, 5000)
+        }
+        hasNeedle = true
+    } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
+        alreadyHere = true
+    }else {
+        alreadyHere = false
+    }
+}
+
+function movePlayer() {
+    if (!dialogShowing && !clearLevelOne){
+       
+        if (playerY >= 450 && gameRunning) {
+            levelOneWin()
+        } 
+        if(keys['ArrowUp'] && playerY > 25){
+            console.log(playerX) 
+        console.log(playerY) 
+            playerY -= playerSpeed;
+            playerState = 'up';
+            checkStep()
+            moving = true;
+        } else if (keys['ArrowDown']){
+            console.log(playerX) 
+        console.log(playerY) 
+            if (playerY === (tubY-24) && playerX <= tubX+115) {
+                playerY += playerSpeed / 4;
+                playerState = 'down';
+                moving = true;
+                tubY += playerSpeed / 4;
+            } else if (playerY < 360) {
+                playerY += playerSpeed;
+                playerState = 'down';
+                moving = true;
+                checkStep()
+            }
+            moving = true;
+        } else if (keys['ArrowLeft'] && playerX > 20){
+            console.log(playerX) 
+        console.log(playerY) 
+            if (playerX > tubX+130) {
+                playerX -= playerSpeed;
+                playerState = 'left';
+                checkStep()
+                moving = true;
+            } else if (playerX <= tubX+126 && playerY < tubY-30) {
+                playerX -= playerSpeed;
+                playerState = 'left';
+                checkStep()
+                moving = true;
+            } else if ((playerX === tubX+126 && playerY >= tubY-30)) {
+                if (!dialogShowing) {
+                    while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                    appendtoDialog(toSayLevelOne.water[0].string)
+                    toggleDialog()
+                    setTimeout(() => {
+                        toggleDialog()
+                    }, 3000)
+                }
+            }
+        } else if (keys['ArrowRight'] && playerX < 530){
+            console.log(playerX) 
+        console.log(playerY) 
+            playerX += playerSpeed;
+            playerState = 'right';
+            checkStep()
+            moving = true;
+        }
     }
 }
 
 function levelOneWin() {
     gameRunning = false;
+    clearLevelOne = true
+    appendtoDialog(toSayLevelOne.onWin[0].string)
+    toggleDialog()
+    setTimeout(() => {toggleDialog()}, 6000)
 }
 
 let fps, fpsInterval, startTime, now, then, elapsed;
@@ -300,7 +399,7 @@ function animateMouse(){
     ctx.drawImage(images.tub, 3, 20, 150, 200, tubX, tubY, 140, 200)
     ctx.drawImage(images.hay, 0, 0, 150, 150, 370, 60, 150, 150)
     // ctx.drawImage(images.wire, 0, 0, 60, 30, 400, 120, 60, 30)
-    ctx.drawImage(images.bowl, 0, 0, 275, 178, 45, 75, 275, 178)
+    ctx.drawImage(images.bowl, 0, 0, 75, 75, 45, 75, 75, 75)
     ctx.drawImage(images.wall, 0, 0, 150, 200, 135, 400, 140, 200)
     ctx.drawImage(images.wall, 0, 0, 150, 200, 260, 400, 140, 200)
     ctx.drawImage(images.wall, 0, 0, 150, 200, 390, 400, 140, 200)
@@ -331,10 +430,10 @@ function animateMouse(){
     ctx.drawImage(images.left_wall, 0, 0, 25, 100, 0, 380, 25, 100)
     if (gameRunning) {
         drawSprite(images.player, playerFrameX, playerFrameY, playerWidth, playerHeight, playerX, playerY, playerWidth, playerHeight)
+        movePlayer()
     }
     // if (moving === true) 
     gameFrame++;
-    movePlayer()
 }
 
 startAnimating(10);

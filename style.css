@@ -51,6 +51,43 @@ h2{
     transition: all .3s ease-out;
 }
 
+#skip-button-holder {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 930%);
+    width: 600px;
+    height: 25px;
+    padding: 0 5px;
+    margin: 0 0;
+}
+
+#skip-button {
+    /* position: absolute; */
+    height: 25px;
+    width: 60px;
+    background-color: #665355;
+    color: #A9A8A6;
+    z-index: 10;
+    /* top: 25%;
+    left: 66.5%; */
+    /* transform: translate(-50%, -50%); */
+    /* font-family: sans-serif; */
+    display: inline-block;
+    border-radius: 2px;
+    transition: all .3s ease-out;
+    opacity: 0;
+}
+
+#skip-button.revealed {
+    opacity: 1;
+    cursor: pointer;
+}
+
 p {
     background-color: #665355;
     color: #A9A8A6;
