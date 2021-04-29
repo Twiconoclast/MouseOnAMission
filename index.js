@@ -381,11 +381,11 @@ function startAnimating(fps){
     fpsInterval = 1000/fps;
     then = Date.now();
     startTime = then;
-    animateMouse();
+    animateLevelOne();
 }
 // ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH)
-function animateMouse(){
-    requestAnimationFrame(animateMouse);
+function animateLevelOne(){
+    requestAnimationFrame(animateLevelOne);
     now = Date.now();
     elapsed = now - then;
     if (elapsed > fpsInterval){
@@ -437,3 +437,10 @@ function animateMouse(){
 }
 
 startAnimating(10);
+
+
+// ***********************LEVEL TWO***************************//
+
+
+// ***********************LEVEL TWO***************************//
+
