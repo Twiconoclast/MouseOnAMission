@@ -59,7 +59,6 @@ window.addEventListener('keydown', function(e) {
         multibox = true
         skipButton.classList.add("revealed")
         const open = setInterval(() => {
-            console.log(multibox)
                 if (counter === 2 || multibox === false) clearInterval(open);
                 setTimeout(() => {
                     if (dialogShowing && multibox) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
@@ -312,15 +311,11 @@ function movePlayer() {
             levelOneWin()
         } 
         if(keys['ArrowUp'] && playerY > 25){
-            console.log(playerX) 
-        console.log(playerY) 
             playerY -= playerSpeed;
             playerState = 'up';
             checkStep()
             moving = true;
         } else if (keys['ArrowDown']){
-            console.log(playerX) 
-        console.log(playerY) 
             if (playerY === (tubY-24) && playerX <= tubX+115) {
                 playerY += playerSpeed / 4;
                 playerState = 'down';
@@ -334,8 +329,6 @@ function movePlayer() {
             }
             moving = true;
         } else if (keys['ArrowLeft'] && playerX > 20){
-            console.log(playerX) 
-        console.log(playerY) 
             if (playerX > tubX+130) {
                 playerX -= playerSpeed;
                 playerState = 'left';
@@ -357,8 +350,6 @@ function movePlayer() {
                 }
             }
         } else if (keys['ArrowRight'] && playerX < 530){
-            console.log(playerX) 
-        console.log(playerY) 
             playerX += playerSpeed;
             playerState = 'right';
             checkStep()
@@ -444,3 +435,31 @@ startAnimating(10);
 
 // ***********************LEVEL TWO***************************//
 
+
+const toSayLevelTwo = {
+    opening: [
+        {string: "It's late evening in the farmhouse. "}, 
+        {string: "You were tasked with drugging the farmer's cat so that your fellows could complete their work in safety... "},
+        {string: "...but you have been captured and placed in this cage. "},
+        {string: "You must escape and complete your mission. You don't have much time. "}
+    ],
+    water: [
+        {string: "A water dish is slid through the edge of the cage. Hmm... "}
+    ],
+    food: [
+        {string: "A generous serving of some not-what-the-people-eat. Pass. "}
+    ],
+    cageNoNeedle: [
+        {string: "The opening of the cage is locked. It doesn't look very sturdy. "}
+    ],
+    haystack: [
+        {string: "A pile of soft hay has been provided for you to sleep on, and -Ouch!- What's this? -> "}, 
+        {string: "There was a needle in it. This could come in handy. "}
+    ],
+    cageWithNeedle: [
+        {string: "You twist and probe and pry with the needle but the lock won't budge! You'll have to find another way. "}
+    ],
+    onWin: [
+        {string: "You did it; you're out! Out of the frying pan and into the fire, that is. You jump down and have a look around. "}
+    ]
+}

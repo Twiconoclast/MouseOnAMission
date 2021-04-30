@@ -140,14 +140,14 @@ a {
     width: 600px;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    background-image: url(tiles_scaled.jpg);
+    background-image: url(grey_tiles.jpg);
 }
 
 #talks-to-player {
     opacity: 0;
-    background-color: blanchedalmond;
+    background-color: #E2E2E2;
     border-radius: 5px;
-    border: 2px solid brown;
+    border: 2px solid #7991AA;
 }
 
 #talks-to-player.revealed {
