@@ -464,7 +464,6 @@ const toSayLevelTwo = {
         {string: "Dragon is waiting by the door for someone to let her out. "}, 
         {string: "Her food bowl is on the other side of the room. You need to empty a packet of sedatives into it and draw her back to it. "},
         {string: "There's where you came in and there's your packet there on the ground! You had almost made it. "},
-        {string: "Get over there to retrieve it. Be careful of the toys on the floor. Some of them are noisy. "}
     ],
     hide: [
         {string: "\"There's a snake in my boots.\" "},
@@ -653,7 +652,7 @@ function animateLevelTwo(){
         }, 100)
         skipButton.classList.add("revealed")
         const open = setInterval(() => {
-                if (counter === 2 || !multibox) clearInterval(open);
+                if (counter === 1 || !multibox) clearInterval(open);
                 setTimeout(() => {
                     if (dialogShowing && multibox) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
                 }, 3000)
@@ -672,7 +671,6 @@ function animateLevelTwo(){
     let position = Math.floor(gameFrame / staggerFrames) % 3;
     let playerFrameX = playerWidth * position;
     let playerFrameY = mouseActions[playerState].loc[position].y;
-    // debugger
     ctxTwo.drawImage(images.levelTwoBackground, bX, bY, bW, bH, 0, 0, canvasTwo.width, canvasTwo.height)
     ctxTwo.drawImage(images.envelope, 0, 0, 30, 30, -(bX - envelopeDX), -(bY - envelopeDY), 30, 30)
     if (levelTwoRunning && showMouse) {
@@ -748,26 +746,22 @@ function movePlayerLevelTwo() {
        
         if(keys['ArrowUp']){
             if (bX < 700 && bY >= 450 && playerY >= 15 && !((playerY + bY + 11) >= tableH)) {
-                console.log('first if')
                 playerY -= playerSpeed;
                 playerState = 'up';
                 // checkStepLevel2()
                 moving = true;
             } else if ((((bX + playerX + playerWidth) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 25) <= dollhouseStopH)) && ((bY + playerY + 25) >= dollhouseStopY))) {
-                console.log('dollhouse restraint')
-            } else if ((bX > 1200 && bY > 0) || (playerX + bX > 1200 && bY > 0)) {
-                console.log('move screen')
+            } else if ((bX > 1200 && bY > 0 && ((bY + playerY) > 100)) || (playerX + bX > 1200 && bY > 0) && ((bY + playerY) > 120)) {
                 bY -= playerSpeed
                 playerState = 'up';
             } else if (((bX + playerX) < 1250) && (bY + playerY > 465)) {
-                console.log('move if far enough over')
                 if (((playerX + bX) > tableW)) {
                     playerY -= playerSpeed;
                     playerState = 'up';
                     // checkStepLevel2()
                     moving = true;
                 }
-            } else if (((bX + playerX) >= 1200) && ((bY + playerY) > 100)) {
+            } else if (((bX + playerX) >= 1200) && ((bY + playerY) > 120)) {
                 console.log('constrain for mousehole here')
                     playerY -= playerSpeed;
                     playerState = 'up';
@@ -795,14 +789,22 @@ function movePlayerLevelTwo() {
                 } else if (((playerX + bX) < tableW) && ((playerY + playerHeight + bY) < tableY)) {
                     bX -= playerSpeed
                     playerState = 'left';
-                } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) > tableH)) {
+                } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH)) {
                     bX -= playerSpeed
                     playerState = 'left';
                 }
-            } else if (((bY + playerY) > 450) && ((bX + playerX) > 320)) {
+            } else if (((bY + playerY) > 450) && ((bX + playerX) > 350)) {
                 if ((playerX + bX) > tableW) {
-                    playerX -= playerSpeed
-                    playerState = 'left';
+                    console.log(dollhouseStopW)
+                    console.log(dollhouseStopH)
+                    console.log(dollhouseStopY)
+                    console.log(bY + playerY)
+                    if (((bX + playerX) <= dollhouseStopW) && (((bY + playerY +25) > dollhouseStopY) && ((bY + playerY + 25) < dollhouseStopH))){
+
+                    } else {
+                        playerX -= playerSpeed
+                        playerState = 'left';
+                    }
                 } else if (((playerX + bX) < tableW) && ((playerY + playerHeight + bY) < tableY)) {
                     playerX -= playerSpeed
                     playerState = 'left';
@@ -817,20 +819,7 @@ function movePlayerLevelTwo() {
                 // checkStepLevel2()
                 moving = true;
             }
-            // } else if (((bY + playerY) < 450) && ) {
-
-            // }
-            
-            // } else if ((playerX === tubX+126 && playerY >= tubY-30)) {
-            //     if (!dialogShowing) {
-            //         while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-            //         appendtoDialog(toSayLevelOne.water[0].string)
-            //         toggleDialog()
-            //         setTimeout(() => {
-            //             toggleDialog()
-            //         }, 3000)
-            //     }
-            // }
+           
         } else if (keys['ArrowRight']){
             if (bX <= 1200 && playerX > 400) {
                 bX += playerSpeed
