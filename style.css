@@ -12,6 +12,10 @@ body {
     background-color: #665355;
 }
 
+.hide {
+    display: none;
+}
+
 h2{
     background-color: #665355;
     color: #A9A8A6;
@@ -141,6 +145,17 @@ a {
     transform: translate(-50%, -50%);
     border-radius: 10px;
     background-image: url(grey_tiles.jpg);
+}
+
+#level-two {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* height: 450px;
+    width: 600px; */
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background: none;
 }
 
 #talks-to-player {
