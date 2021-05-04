@@ -96,6 +96,10 @@ p {
     background-color: #665355;
     color: #A9A8A6;
     /* width: 15%; */
+    text-align: left;
+}
+
+.in-box {
     text-align: center;
 }
 

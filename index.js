@@ -743,24 +743,29 @@ function checkStepLevel2() {
 
 function movePlayerLevelTwo() {
     if (!dialogShowing && levelTwoRunning){
-       
+        // checkStepLevel2()
         if(keys['ArrowUp']){
             if (bX < 700 && bY >= 450 && playerY >= 15 && !((playerY + bY + 11) >= tableH)) {
                 playerY -= playerSpeed;
                 playerState = 'up';
                 // checkStepLevel2()
                 moving = true;
-            } else if ((((bX + playerX + playerWidth) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 25) <= dollhouseStopH)) && ((bY + playerY + 25) >= dollhouseStopY))) {
+            } else if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 25) <= dollhouseStopH)) && ((bY + playerY + 25) >= dollhouseStopY))) {
             } else if ((bX > 1200 && bY > 0 && ((bY + playerY) > 100)) || (playerX + bX > 1200 && bY > 0) && ((bY + playerY) > 120)) {
                 bY -= playerSpeed
                 playerState = 'up';
             } else if (((bX + playerX) < 1250) && (bY + playerY > 465)) {
-                if (((playerX + bX) > tableW)) {
+                if (((playerX + bX + 5) >= tableW)) {
                     playerY -= playerSpeed;
                     playerState = 'up';
                     // checkStepLevel2()
                     moving = true;
                 }
+            } else if (((bX + playerX) >= 1200) && ((bX + playerX) < 1300) && (bY > 0)) {
+                    bY -= playerSpeed;
+                    playerState = 'up';
+                    // checkStepLevel2()
+                    moving = true;
             } else if (((bX + playerX) >= 1200) && ((bY + playerY) > 120)) {
                 console.log('constrain for mousehole here')
                     playerY -= playerSpeed;
@@ -769,24 +774,33 @@ function movePlayerLevelTwo() {
                     moving = true;
             }
         } else if (keys['ArrowDown']){
-            if (playerY > (-((bY+playerHeight) - (tableY))) && playerX <= (-(bX - (tableW -4)))) {
+            if (playerY > (-((bY+playerHeight) - (tableY))) && playerX <= (-(bX - (tableW - 15)))) {
                 
             } else if (bY < 450 && playerY > 360) {
-                bY += playerSpeed;
-                playerState = 'down';
+                if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 30) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
+
+                } else {
+                    bY += playerSpeed;
+                    playerState = 'down';
+                }
             } else if (playerY < 360) {
-                playerY += playerSpeed;
-                playerState = 'down';
-                moving = true;
+                if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 30) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
+
+                } else {
+                    playerY += playerSpeed;
+                    playerState = 'down';
+                    moving = true;
                 // checkStepLevel2()
+                }
             }
             moving = true;
         } else if (keys['ArrowLeft']){
+             
             if (((bY + playerY) > 450) && bX > 350 && playerX < 50) {
                 if ((playerX + bX) > tableW) {
                     bX -= playerSpeed
                     playerState = 'left';
-                } else if (((playerX + bX) < tableW) && ((playerY + playerHeight + bY) < tableY)) {
+                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY)) {
                     bX -= playerSpeed
                     playerState = 'left';
                 } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH)) {
@@ -795,17 +809,13 @@ function movePlayerLevelTwo() {
                 }
             } else if (((bY + playerY) > 450) && ((bX + playerX) > 350)) {
                 if ((playerX + bX) > tableW) {
-                    console.log(dollhouseStopW)
-                    console.log(dollhouseStopH)
-                    console.log(dollhouseStopY)
-                    console.log(bY + playerY)
-                    if (((bX + playerX) <= dollhouseStopW) && (((bY + playerY +25) > dollhouseStopY) && ((bY + playerY + 25) < dollhouseStopH))){
-
+                    
+                    if (((bX + playerX) <= dollhouseStopW) && !((bX + playerX) <= dollhouseStopX) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))){
                     } else {
                         playerX -= playerSpeed
                         playerState = 'left';
                     }
-                } else if (((playerX + bX) < tableW) && ((playerY + playerHeight + bY) < tableY)) {
+                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY)) {
                     playerX -= playerSpeed
                     playerState = 'left';
                 } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH)) {
@@ -821,10 +831,21 @@ function movePlayerLevelTwo() {
             }
            
         } else if (keys['ArrowRight']){
+           
             if (bX <= 1200 && playerX > 400) {
-                bX += playerSpeed
+                
+                if (((bX + playerX + 50) >= dollhouseStopX) && ((bX + playerX + 25) <= dollhouseStopW) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))) {
+                } else{
+
+                    bX += playerSpeed
+                }
             } else if (playerX < 505) {
-                playerX += playerSpeed;
+                if (((bX + playerX + 50) >= dollhouseStopX) && ((bX + playerX + 25) < dollhouseStopW) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))) {
+
+                } else{
+
+                    playerX += playerSpeed
+                }
             }
             playerState = 'right';
             // checkStepLevel2()
