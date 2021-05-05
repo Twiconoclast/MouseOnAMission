@@ -673,7 +673,7 @@ function animateLevelTwo(){
     let playerFrameX = playerWidth * position;
     let playerFrameY = mouseActions[playerState].loc[position].y;
     ctxTwo.drawImage(images.levelTwoBackground, bX, bY, bW, bH, 0, 0, canvasTwo.width, canvasTwo.height)
-    ctxTwo.drawImage(images.envelope, 0, 0, 30, 30, -(bX - envelopeDX), -(bY - envelopeDY), 30, 30)
+    if (!gotPacket) ctxTwo.drawImage(images.envelope, 0, 0, 30, 30, -(bX - envelopeDX), -(bY - envelopeDY), 30, 30)
     if (levelTwoRunning && showMouse) {
         drawSprite(images.player, playerFrameX, playerFrameY, playerWidth, playerHeight, playerX, playerY, playerWidth, playerHeight);
     }
@@ -702,52 +702,85 @@ function checkStepLevel2() {
     //             toggleDialog()
     //         }, 4000)
     //     }
-    // } else if (playerY <= 110 && playerY >= 42 && playerX >=24 && playerX <= 96) {
-    //     alreadyHere = true
-    // } else if (playerY <= 110 && playerY >= 68 && playerX >=360 && playerX <= 474 && !alreadyHere && !hasNeedle) {
-    //     alreadyHere = true
-    //     if (!dialogShowing){
-    //         appendtoDialog(toSayLevelOne.haystack[0].string)
-    //         toggleDialog()
-    //         setTimeout(() => {
-    //             if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-    //             }, 4000)
-    //         setTimeout(() => {
-    //             appendtoDialog(toSayLevelOne.haystack[1].string)
-    //         }, 4000)
-    //         setTimeout(() => {
-    //             toggleDialog()
-    //         }, 8000)
-    //     }
-    //     hasNeedle = true
-    // } else if (playerY <= 110 && playerY >= 68 && playerX >=360 && playerX <= 474) {
-    //     alreadyHere = true
-    //  } else if (playerY <= 248 && playerY >= 200 && playerX >=525 && playerX && !alreadyHere && !hasNeedle) {
-    //     alreadyHere = true
-    //     if (!dialogShowing){
-    //         appendtoDialog(toSayLevelOne.cageNoNeedle[0].string)
-    //         toggleDialog()
+    if (combinedY <= 300 && combinedY >= 232 && combinedX >=1325 && combinedX <= 1386 && !alreadyHere && !gotPacket) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelTwo.packet[0].string)
+            toggleDialog()
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                }, 2500)
+            setTimeout(() => {
+                toggleDialog()
+            }, 2500)
+        }
+        gotPacket = true
+    } else if (combinedY >= 670 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1625 && !alreadyHere && !gotPacket) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelTwo.foodNoPacket[0].string)
+            toggleDialog()
 
-    //         setTimeout(() => {
-    //             toggleDialog()
-    //         }, 4000)
-    //     }
-    // } else if (playerY <= 248 && playerY >= 200 && playerX >=525 && !alreadyHere && hasNeedle) {
-    //     alreadyHere = true
-    //     if (!dialogShowing){
-    //         appendtoDialog(toSayLevelOne.cageWithNeedle[0].string)
-    //         toggleDialog()
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                toggleDialog()
+            }, 2500)
+        }
+    } else if (combinedY >= 670 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1625 && !alreadyHere && gotPacket && !druggedFood) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelTwo.foodWithPacket[0].string)
+            toggleDialog()
 
-    //         setTimeout(() => {
-    //             toggleDialog()
-    //         }, 5000)
-    //     }
-    //     hasNeedle = true
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                toggleDialog()
+            }, 3000)
+        }
+        druggedFood = true
+    } else if (combinedY >= 670 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1625) {
+        alreadyHere = true
+    } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && !druggedFood) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelTwo.hide[0].string)
+            toggleDialog()
+
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                appendtoDialog(toSayLevelTwo.hide[1].string)
+            }, 2500)
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                appendtoDialog(toSayLevelTwo.hide[1].string)
+                toggleDialog()
+            }, 4000)
+        }
+        catComming = true
+    } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && druggedFood) {
+        alreadyHere = true
+        if (!dialogShowing){
+            appendtoDialog(toSayLevelTwo.hide[0].string)
+            toggleDialog()
+
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                appendtoDialog(toSayLevelTwo.hide[1].string)
+            }, 2500)
+            setTimeout(() => {
+                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                appendtoDialog(toSayLevelTwo.hide[1].string)
+                toggleDialog()
+            }, 4000)
+        }
+        catComming = true
     // } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
     //     alreadyHere = true
-    // }else {
-    //     alreadyHere = false
-    // }
+    } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390) {
+        alreadyHere = true
+    }else {
+       alreadyHere = false
+    }
 }
 
 function movePlayerLevelTwo() {
@@ -762,7 +795,7 @@ function movePlayerLevelTwo() {
                 checkStepLevel2()
                 moving = true;
             } else if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 25) <= dollhouseStopH)) && ((bY + playerY + 25) >= dollhouseStopY))) {
-            } else if ((bX > 1200 && bY > 0 && ((bY + playerY) > 100)) || (playerX + bX > 1200 && bY > 0) && ((bY + playerY) > 120)) {
+            } else if ((bX > 1200 && bY > 0 && ((bY + playerY) > 100)) || (playerX + bX > 1200 && bY > 0) && ((bY + playerY) > 120) && playerY < 250 ) {
                 bY -= playerSpeed
                 playerState = 'up';
                 checkStepLevel2()
@@ -773,7 +806,7 @@ function movePlayerLevelTwo() {
                     checkStepLevel2()
                     moving = true;
                 }
-            } else if (((bX + playerX) >= 1200) && ((bX + playerX) < 1300) && (bY > 0)) {
+            } else if (((bX + playerX) >= 1200) && ((bX + playerX) < 1300) && (bY > 0) && playerY < 250) {
                     bY -= playerSpeed;
                     playerState = 'up';
                     checkStepLevel2()
@@ -785,11 +818,14 @@ function movePlayerLevelTwo() {
                     checkStepLevel2()
                     moving = true;
             }
+            playerState = 'up';
         } else if (keys['ArrowDown']){
-            if (playerY > (-((bY+playerHeight) - (tableY))) && playerX <= (-(bX - (tableW - 15)))) {
+            if ((bX + playerX) >= 1625 && (bY + playerY) >= 670) {
+                checkStepLevel2()
+            } else if (playerY > (-((bY+playerHeight) - (tableY))) && playerX <= (-(bX - (tableW - 15)))) {
                 
-            } else if (bY < 450 && playerY > 360) {
-                if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 30) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
+            } else if (bY < 450 && playerY > 200) {
+                if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY +50) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
 
                 } else {
                     bY += playerSpeed;
@@ -797,7 +833,7 @@ function movePlayerLevelTwo() {
                     checkStepLevel2()
                 }
             } else if (playerY < 360) {
-                if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 30) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
+                if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY +50) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
 
                 } else {
                     playerY += playerSpeed;
@@ -806,6 +842,7 @@ function movePlayerLevelTwo() {
                 checkStepLevel2()
                 }
             }
+            playerState = 'down';
             moving = true;
         } else if (keys['ArrowLeft']){
              
@@ -848,10 +885,11 @@ function movePlayerLevelTwo() {
                 checkStepLevel2()
                 moving = true;
             }
-           
+           playerState = 'left';
         } else if (keys['ArrowRight']){
-           
-            if (bX <= 1200 && playerX > 400) {
+            if ((bX + playerX) >= 1625 && (bY + playerY) >= 670 && (bY + playerY) <= 807) {
+                checkStepLevel2()
+            } else if (bX <= 1200 && playerX > 400) {
                 
                 if (((bX + playerX + 50) >= dollhouseStopX) && ((bX + playerX + 25) <= dollhouseStopW) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))) {
                 } else{
