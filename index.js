@@ -485,7 +485,9 @@ const toSayLevelTwo = {
         {string: "You empty the sedatives into the dish. Now to get her attention... "}
     ],
     onWin: [
-        {string: "You made it. Now everyone will be safe while they work. Excellent job! "}
+        {string: "You made it. Now everyone will be safe while they work. Excellent job! "},
+        {string: "Special thanks to artists who shared their work on opengameart.org. This game would not have been possible without their generosity. "},
+        {string: "To play again, press F5. "}
     ],
     onLose: [
         {string: "You got got. As the cat's jaws crunch into you, you hope your fellows will not meet the same fate due to your failure. "},
@@ -506,6 +508,7 @@ let druggedFood = false
 let levelTwoRunning = false
 let showMouse = true
 let catComming = false
+let behindTable = false
 
 if (clearLevelOne) {
     levelTwoRunning = true
@@ -521,6 +524,22 @@ images.levelTwoBackground = new Image()
 images.levelTwoBackground.src = 'level2_background.jpg'
 images.envelope = new Image()
 images.envelope.src = 'envelope.PNG'
+images.cat_look_left = new Image()
+images.cat_look_left.src = 'cat_look_left.png'
+images.cat_look_right = new Image()
+images.cat_look_right.src = 'cat_look_right.png'
+images.cat_slow_left = new Image()
+images.cat_slow_left.src = 'cat_slow_left.png'
+images.cat_slow_right = new Image()
+images.cat_slow_right.src = 'cat_slow_right.png'
+images.cat_run_left = new Image()
+images.cat_run_left.src = 'cat_run_left.png'
+images.cat_run_right = new Image()
+images.cat_run_right.src = 'cat_run_right.png'
+images.eating_mouse = new Image()
+images.eating_mouse.src = 'eating_mouse.PNG'
+images.eating_mouse_look_right = new Image()
+images.eating_mouse_look_right.src = 'eating_mouse_look_right.PNG'
 let envelopeDX = 1395
 let envelopeDY = 277
 
@@ -686,8 +705,20 @@ function checkStepLevel2() {
     let combinedX = playerX + bX;
     let combinedY = playerY + bY;
 
-    if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380) {
+    if (combinedY >= 810 && combinedX <= 725) {
+        behindTable = true
+    } else {
+        behindTable = false
+    }
+
+    if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComming) {
         showMouse = false
+    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComming) {
+        showMouse = false
+    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComming) {
+        showMouse = false
+        winLevelTwo = true
+        levelTwoWin()
     } else {
         showMouse = true
     }
@@ -786,7 +817,7 @@ function checkStepLevel2() {
 function movePlayerLevelTwo() {
     // console.log(playerX + bX)
     // console.log(playerY + bY)
-    if (!dialogShowing && levelTwoRunning){
+    if (!dialogShowing && levelTwoRunning && !winLevelTwo){
         // checkStepLevel2()
         if(keys['ArrowUp']){
             if (bX < 700 && bY >= 450 && playerY >= 15 && !((playerY + bY + 11) >= tableH)) {
@@ -824,7 +855,7 @@ function movePlayerLevelTwo() {
                 checkStepLevel2()
             } else if (playerY > (-((bY+playerHeight) - (tableY))) && playerX <= (-(bX - (tableW - 15)))) {
                 
-            } else if (bY < 450 && playerY > 200) {
+            } else if (bY < 450 && playerY > 50) {
                 if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY +50) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
 
                 } else {
@@ -846,16 +877,16 @@ function movePlayerLevelTwo() {
             moving = true;
         } else if (keys['ArrowLeft']){
              
-            if (((bY + playerY) > 450) && bX > 350 && playerX < 50) {
+            if (((bY + playerY) > 450) && bX > 350 && playerX < 50 && !catComming) {
                 if ((playerX + bX) > tableW) {
                     bX -= playerSpeed
                     checkStepLevel2()
                     playerState = 'left';
-                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY)) {
+                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY) && !catComming) {
                     bX -= playerSpeed
                     checkStepLevel2()
                     playerState = 'left';
-                } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH)) {
+                } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH) && !catComming) {
                     bX -= playerSpeed
                     checkStepLevel2()
                     playerState = 'left';
@@ -898,7 +929,6 @@ function movePlayerLevelTwo() {
                 }
             } else if (playerX < 505) {
                 if (((bX + playerX + 50) >= dollhouseStopX) && ((bX + playerX + 25) < dollhouseStopW) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))) {
-
                 } else{
                     checkStepLevel2()
                     playerX += playerSpeed
@@ -908,6 +938,19 @@ function movePlayerLevelTwo() {
             // checkStepLevel2()
             moving = true;
         }
+    }
+}
+
+function levelTwoWin() {
+    if (winLevelTwo) {
+        const moveOver = setInterval(() =>{
+            if (bX >= 1200 && bY >= 450) clearInterval(moveOver)
+            if (bX < 1200) {
+                bX += 10
+            } else if (bY < 450) {
+                bY += 10
+            }
+        }, 100)
     }
 }
 
