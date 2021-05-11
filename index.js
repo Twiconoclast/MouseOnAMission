@@ -507,8 +507,9 @@ let letHitToyOnce = false
 let druggedFood = false
 let levelTwoRunning = false
 let showMouse = true
-let catComming = false
+let catComing = false
 let behindTable = false
+let caughtInHeadlights = false
 
 
 if (clearLevelOne) {
@@ -539,6 +540,8 @@ images.cat_run_right = new Image()
 images.cat_run_right.src = 'cat_run_right.png'
 images.cat_run_up = new Image()
 images.cat_run_up.src = 'cat_run_up.png'
+images.cat_run_up_left = new Image()
+images.cat_run_up_left.src = 'cat_run_up_left.png'
 images.eating_mouse = new Image()
 images.eating_mouse.src = 'eating_mouse.PNG'
 images.eating_mouse_look_right = new Image()
@@ -694,11 +697,15 @@ function animateLevelTwo(){
     }
     ctxTwo.clearRect(0, 0, levelTwoWidth, levelTwoHeight);
     let catStaggerFrames;
-    if (catState === 'up') {
+    if (catState === 'up' || catState === 'up_left') {
             catWidth = catUpWidth;
             catHeight = catUpHeight;
             catStaggerFrames = 9;
-            catImage = images.cat_run_up;
+            if (catState === 'up_left') {
+                catImage = images.cat_run_up_left;
+            } else {
+                catImage = images.cat_run_up;
+            }
         } else if (catState === 'run_right' || catState === 'run_left' || catState === 'eat_food') {
             catStaggerFrames = 9;
             catWidth = catRunWidth;
@@ -747,12 +754,12 @@ function animateLevelTwo(){
     if (levelTwoRunning && showMouse) {
         drawSprite(images.player, playerFrameX, playerFrameY, playerWidth, playerHeight, playerX, playerY, playerWidth, playerHeight);
     }
-    if (catComming) {
+    if (catComing) {
         drawSprite(catImage, catFrameX, catFrameY, catWidth, catHeight, -(bX - catX), -(bY - catY), catWidth, catHeight);
     }
         
 
-    movePlayerLevelTwo()
+    if (!caughtInHeadlights) movePlayerLevelTwo()
     // if (movingCat = true) moveCat()
     // if (moving === true) 
     gameFrame++;
@@ -764,6 +771,10 @@ const catActions = []
 const catStates = [
     {
         name: 'up',
+        frames: 6
+    },
+    {
+        name: 'up_left',
         frames: 6
     },
     {
@@ -830,7 +841,7 @@ catStates.forEach((state, idx) => {
         loc: []
     }
     for (let j = 0; j < state.frames; j++) {
-        if (state.name === 'up') {
+        if (state.name === 'up' || state.name === 'up_left') {
             let posX = 0;
             let posY = j * catUpHeight;
             frames.loc.push({x: posX, y: posY})
@@ -862,13 +873,13 @@ function checkStepLevel2() {
         behindTable = false
     }
 
-    if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComming) {
+    if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComing) {
         showMouse = false
-    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComming) {
+    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComing) {
         showMouse = false
-    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComming) {
+    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComing) {
         showMouse = false
-    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComming) {
+    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
         showMouse = false
         winLevelTwo = true
         levelTwoWin()
@@ -939,8 +950,16 @@ function checkStepLevel2() {
                 // appendtoDialog(toSayLevelTwo.hide[1].string)
                 toggleDialog()
             }, 4000)
-        }
-        catComming = true
+        } 
+        setTimeout(() => {
+            if (!showMouse || behindTable) {
+                    
+                } else {
+                    getMouse()
+                    caughtInHeadlights = true
+                }
+            }, 9000)
+            catComing = true
     } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && druggedFood) {
         alreadyHere = true
         if (!dialogShowing){
@@ -957,10 +976,15 @@ function checkStepLevel2() {
                 toggleDialog()
             }, 4000)
             setTimeout(() => {
-                if (!showMouse) {levelTwoWin()}
-            }, 10000)
+                if (!showMouse) {
+                    levelTwoWin()
+                } else {
+                    caughtInHeadlights = true
+                    getMouse()
+                }
+            }, 9000)
         }
-        catComming = true
+        catComing = true
     // } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
     //     alreadyHere = true
     } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390) {
@@ -1033,16 +1057,16 @@ function movePlayerLevelTwo() {
             moving = true;
         } else if (keys['ArrowLeft']){
              
-            if (((bY + playerY) > 450) && bX > 350 && playerX < 50 && !catComming) {
+            if (((bY + playerY) > 450) && bX > 350 && playerX < 50 && !catComing) {
                 if ((playerX + bX) > tableW) {
                     bX -= playerSpeed
                     checkStepLevel2()
                     playerState = 'left';
-                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY) && !catComming) {
+                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY) && !catComing) {
                     bX -= playerSpeed
                     checkStepLevel2()
                     playerState = 'left';
-                } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH) && !catComming) {
+                } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH) && !catComing) {
                     bX -= playerSpeed
                     checkStepLevel2()
                     playerState = 'left';
@@ -1097,8 +1121,149 @@ function movePlayerLevelTwo() {
     }
 }
 
-function levelTwoWin() {
+function getMouse() {
 
+    if (showMouse && !behindTable) {
+        let combinedX = playerX + bX;
+        let combinedY = playerY + bY;
+        catX = combinedX - 600;
+        catY = 650;
+        if (combinedY < 450 || ( combinedY < 585 && combinedX > 1450)) {
+            let hitEdge = false
+            const catComesOut = setInterval(() => {
+                catComing = true
+                if (catState === 'eat_left' || catState === 'eat_right') clearInterval(catComesOut)
+                if (!hitEdge) {
+                    catState = 'run_right'
+                    catX += catRunSpeed
+                    if (catX >= 1445) {
+                        hitEdge = true
+                    }
+                } else if (hitEdge && (catY - combinedY) < 100 && (catY - combinedY) > 10) {
+                    
+                    if (catX > 1650) {
+                        catState = 'up_left'
+                        catY -= 10
+                    } else if ((catX) > combinedX ) {
+                        catState = 'up'
+                        catY -= 10
+                    } else {
+                        catState = 'run_right';
+                        catX += catRunSpeed;
+                        catY -= 10;
+                    }
+                    if ((catX - combinedX) <= 20 && (catY - combinedY) <= 20) {
+                        if (catX > 1625) {
+                            catX = 1625
+                        }
+                        catState = 'eat_right'
+                        showMouse = false
+                        sayWhenEaten()
+                    }
+                } else if (hitEdge && combinedX <= 1400 && catY < 300 && (catY - combinedY) < 10) {
+                   
+                    catState = 'run_left'
+                    catX -= catRunSpeed
+                    if ((catX - combinedX) <= 25) {
+                        if (catX <= 1200) {
+                            catX = 1200
+                        }
+                  
+                        catState = 'eat_left'
+                        showMouse = false
+                        sayWhenEaten()
+                    }
+                } else if (catX >= 1445 && combinedX-50 >= catX && catX < 1650 && hitEdge) {
+                    
+                    catState = 'up_left'
+                    catY -= catRunSpeed
+                    catX += 10
+                    if (catY <= combinedY && (combinedX -catX) < 20) {
+
+                        catState = 'eat_right'
+                        showMouse = false
+                        sayWhenEaten()
+                    }
+                } else if (catX >=1445 && combinedX < catX && catX < 1650 && hitEdge) {
+                    
+                    catState = 'up'
+                    catY -= catRunSpeed
+                    catX -= 10
+                    if (catY <= combinedY && (catX - combinedX) > 20) {
+                        catState = 'eat_left'
+                        showMouse = false
+                        sayWhenEaten()
+                    }
+                } else if (hitEdge) {
+                    
+                    if (catX > combinedX){
+                        catState = 'up'
+                        catY -= catRunSpeed
+                    } else {
+                        catState = 'up_left'
+                        catY -= catRunSpeed
+                    }
+                    if (catY <= combinedY) {
+                        if (catX > combinedX && (catX - combinedX) < 40) {
+                           
+                            catState = 'eat_right'
+                            showMouse = false
+                            sayWhenEaten()
+                        } else if (catX <= combinedX && (combinedX - catX) < 40) {
+                            
+                            catState = 'eat_right'
+                            showMouse = false
+                            sayWhenEaten()
+                        }
+                    }
+                }
+            }, 100);
+        } else {
+            catComing = true
+            const catComesOut = setInterval(() => {
+                
+                if (catState === 'eat_left' || catState === 'eat_right') clearInterval(catComesOut)
+                if (catX + 100 < combinedX) {
+                    if (catX +110 >= combinedX && catY + 50 >= combinedY && catY - 50 <= combinedY) {
+                        
+                        catState = 'eat_right'
+                        showMouse = false
+                        sayWhenEaten()
+                    } else if (catY + 40 > combinedY) {
+                        
+                        catState = 'run_right'
+                        catX += catRunSpeed
+                        catY -= 10
+                    } else if ( catY + 50 < combinedY) {
+                        
+                        catState = 'run_right'
+                        catX += catRunSpeed
+                        catY += 10
+                    } else {
+                        
+                        catState = 'run_right'
+                        catX += catRunSpeed
+                    }
+                }
+            }, 75);
+        }
+    }
+}
+
+function sayWhenEaten() {
+    if (!dialogShowing){
+        appendtoDialog(toSayLevelTwo.onLose[0].string)
+        toggleDialog()
+
+        setTimeout(() => {
+            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+            appendtoDialog(toSayLevelTwo.onLose[1].string)
+        }, 7000)
+    }
+}
+
+function levelTwoWin() {
+    
     if (winLevelTwo) {
         const moveOver = setInterval(() =>{
             if (bX >= 1200 && bY >= 450) clearInterval(moveOver)
