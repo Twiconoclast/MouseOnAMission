@@ -497,10 +497,13 @@ const toSayLevelTwo = {
         {string: "You got got. As the cat's jaws crunch into you, you hope your fellows will not meet the same fate due to your failure. "},
         {string: "To play again, press F5. "}
     ],
+    sorOfWon: [
+        {string: "You got got. At least you have succeeded in your mission and your fellows will not meet the same fate. "},
+    ],
     hitAToyOnce: [
         {string: "Be careful! "},
     ],
-    hitAToyOnce: [
+    hitAToyTwice: [
         {string: "HIDE! "},
     ],
     timeOut: [
@@ -548,6 +551,8 @@ images.cat_run_right = new Image()
 images.cat_run_right.src = 'cat_run_right.png'
 images.cat_run_up = new Image()
 images.cat_run_up.src = 'cat_run_up.png'
+images.cat_run_down = new Image()
+images.cat_run_down.src = 'cat_run_down.PNG'
 images.cat_run_up_left = new Image()
 images.cat_run_up_left.src = 'cat_run_up_left.png'
 images.eating_mouse = new Image()
@@ -562,47 +567,53 @@ images.bellFromLeft = new Image()
 images.bellFromLeft.src = 'bellfromleft.PNG'
 images.bellFromRight = new Image()
 images.bellFromRight.src = 'bellfromright.PNG'
+images.bluecar = new Image()
+images.bluecar.src = 'bluecar.PNG'
+images.yellowcar = new Image()
+images.yellowcar.src = 'yellowcar.PNG'
+images.greycar = new Image()
+images.greycar.src = 'greycar.PNG'
 
 let car1 = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
+    x: 885,
+    y: 630,
+    width: 30,
+    height: 14
 }
 
 let car2 = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
+    x: 1035,
+    y: 690,
+    width: 30,
+    height: 14
 }
 
 let car3 = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
+    x: 1015,
+    y: 770,
+    width: 30,
+    height: 16
 }
 
 let car4 = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
+    x: 925,
+    y: 545,
+    width: 30,
+    height: 16
 }
 
 let car5 = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
+    x: 795,
+    y: 540,
+    width: 30,
+    height: 15
 }
 
 let car6 = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
+    x: 875,
+    y: 835,
+    width: 30,
+    height: 15
 }
 
 
@@ -768,12 +779,14 @@ function animateLevelTwo(){
     }
     ctxTwo.clearRect(0, 0, levelTwoWidth, levelTwoHeight);
     let catStaggerFrames;
-    if (catState === 'up' || catState === 'up_left') {
+    if (catState === 'up' || catState === 'up_left' || catState === 'down') {
             catWidth = catUpWidth;
             catHeight = catUpHeight;
             catStaggerFrames = 9;
             if (catState === 'up_left') {
                 catImage = images.cat_run_up_left;
+            } else if (catState === 'down') {
+                catImage = images.cat_run_down;
             } else {
                 catImage = images.cat_run_up;
             }
@@ -847,6 +860,12 @@ function animateLevelTwo(){
     // console.log(catFrameY)
     ctxTwo.drawImage(images.levelTwoBackground, bX, bY, bW, bH, 0, 0, canvasTwo.width, canvasTwo.height)
     ctxTwo.drawImage(bellImg, 0, 0, bellWidth, bellHeight, -(bX - bellX), -(bY - bellY), bellWidth, bellHeight)
+    ctxTwo.drawImage(images.bluecar, 0, 0, car1.width, car1.height, -(bX - car1.x), -(bY - car1.y), car1.width, car1.height)
+    ctxTwo.drawImage(images.bluecar, 0, 0, car2.width, car2.height, -(bX - car2.x), -(bY - car2.y), car2.width, car2.height)
+    ctxTwo.drawImage(images.yellowcar, 0, 0, car3.width, car3.height, -(bX - car3.x), -(bY - car3.y), car3.width, car3.height)
+    ctxTwo.drawImage(images.yellowcar, 0, 0, car4.width, car4.height, -(bX - car4.x), -(bY - car4.y), car4.width, car4.height)
+    ctxTwo.drawImage(images.greycar, 0, 0, car5.width, car5.height, -(bX - car5.x), -(bY - car5.y), car5.width, car5.height)
+    ctxTwo.drawImage(images.greycar, 0, 0, car6.width, car6.height, -(bX - car6.x), -(bY - car6.y), car6.width, car6.height)
     if (!gotPacket) ctxTwo.drawImage(images.envelope, 0, 0, 30, 30, -(bX - envelopeDX), -(bY - envelopeDY), 30, 30)
     if (levelTwoRunning && showMouse) {
         drawSprite(images.player, playerFrameX, playerFrameY, playerWidth, playerHeight, playerX, playerY, playerWidth, playerHeight);
@@ -873,6 +892,10 @@ const catStates = [
     },
     {
         name: 'up_left',
+        frames: 6
+    },
+    {
+        name: 'down',
         frames: 6
     },
     {
@@ -942,6 +965,10 @@ catStates.forEach((state, idx) => {
     }
     for (let j = 0; j < state.frames; j++) {
         if (state.name === 'up' || state.name === 'up_left') {
+            let posX = 0;
+            let posY = j * catUpHeight;
+            frames.loc.push({x: posX, y: posY})
+        } else if (state.name === 'down') {
             let posX = 0;
             let posY = j * catUpHeight;
             frames.loc.push({x: posX, y: posY})
@@ -1015,13 +1042,14 @@ function checkStepLevel2() {
                     }
                     counter += 1
                 }, 1000)
+            catX = bX - 200    
             catComing = true
             } 
         }
     }
-    if (hitCar(combinedX, combinedY)) {
 
-    }
+    
+
     if (combinedY >= 810 && combinedX <= 725) {
         behindTable = true
     } else {
@@ -1037,13 +1065,13 @@ function checkStepLevel2() {
         behindHouse = false
     }
 
-    if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComing) {
+    if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComing) {
         showMouse = false
-    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComing) {
+    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComing) {
         showMouse = false
-    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComing) {
+    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComing) {
         showMouse = false
-    } else if (combinedY <= 460 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
+    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
         showMouse = false
         winLevelTwo = true
         levelTwoWin()
@@ -1051,17 +1079,48 @@ function checkStepLevel2() {
         showMouse = true
     }
 
-    // if (playerY <= 110 && playerY >= 42 && playerX >=24 && playerX <= 96 && !alreadyHere) {
-    //     alreadyHere = true
-    //     if (!dialogShowing){
-    //         appendtoDialog(toSayLevelOne.food[0].string)
-    //         toggleDialog()
-
-    //         setTimeout(() => {
-    //             toggleDialog()
-    //         }, 4000)
-    //     }
-    if (combinedY <= 300 && combinedY >= 232 && combinedX >=1325 && combinedX <= 1400 && !alreadyHere && !gotPacket) {
+    let hittingCar = hitCar(combinedX, combinedY)
+    if (hittingCar && !letHitToyOnce && !alreadyHere) {
+        if (!dialogShowing) {
+            appendtoDialog(toSayLevelTwo.hitAToyOnce[0].string)
+            toggleDialog()
+            setTimeout(() => {
+                while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                toggleDialog()
+                letHitToyOnce = true
+            }, 1000)
+        }
+        alreadyHere = true
+    } else if (hittingCar && letHitToyOnce && !alreadyHere) {
+        let counter = 0
+        if (!dialogShowing) {
+            appendtoDialog(toSayLevelTwo.hitAToyTwice[0].string)
+            toggleDialog()
+            setTimeout(() => {
+                while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                toggleDialog()
+            }, 1000)
+            const startTimer = setInterval(() => {
+            if ((!showMouse || behindTable) && !alreadyComing) {
+                alreadyComing = true
+                lookForMouse()
+                caughtInHeadlights = true
+                clearInterval(startTimer)
+            } else if (counter > 9 && !alreadyComing) {
+                alreadyComing = true
+                getMouse()
+                caughtInHeadlights = true
+                clearInterval(startTimer)
+            }
+            counter += 1
+        }, 1000)
+        catX = bX - 200
+        catComing = true
+    }
+    alreadyHere = true
+    } else if (hittingCar) {
+        alreadyHere = true
+    } else if (combinedY <= 300 && combinedY >= 232 && combinedX >=1325 && combinedX <= 1400 && !alreadyHere && !gotPacket) {
         alreadyHere = true
         if (!dialogShowing){
             appendtoDialog(toSayLevelTwo.packet[0].string)
@@ -1130,6 +1189,7 @@ function checkStepLevel2() {
             }
             counter += 1
         }, 1000)
+        catX = bX - 200
         catComing = true
     } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && druggedFood) {
         alreadyHere = true
@@ -1155,6 +1215,7 @@ function checkStepLevel2() {
                 }
             }, 9000)
         }
+        catX = bX - 200
         catComing = true
     // } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
     //     alreadyHere = true
@@ -1177,6 +1238,7 @@ function movePlayerLevelTwo() {
                 checkStepLevel2()
                 moving = true;
             } else if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY + 25) <= dollhouseStopH)) && ((bY + playerY + 25) >= dollhouseStopY))) {
+                checkStepLevel2()
             } else if ((bX > 1200 && bY > 0 && ((bY + playerY) > 100)) || (playerX + bX > 1200 && bY > 0) && ((bY + playerY) > 120) && playerY < 250 ) {
                 bY -= playerSpeed
                 playerState = 'up';
@@ -1208,7 +1270,7 @@ function movePlayerLevelTwo() {
                 
             } else if (bY < 450 && playerY > 50) {
                 if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY +50) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
-
+                    checkStepLevel2()
                 } else {
                     bY += playerSpeed;
                     playerState = 'down';
@@ -1216,7 +1278,7 @@ function movePlayerLevelTwo() {
                 }
             } else if (playerY < 360) {
                 if ((((bX + playerX + 25) > (dollhouseStopX)) && (bX + (playerX+25) < dollhouseStopW)) && ((((bY + playerY +50) <= dollhouseStopH)) && ((bY + playerY + 50) >= dollhouseStopY))) {
-
+                    checkStepLevel2()
                 } else {
                     playerY += playerSpeed;
                     playerState = 'down';
@@ -1246,19 +1308,26 @@ function movePlayerLevelTwo() {
                 if ((playerX + bX) > tableW) {
                     
                     if (((bX + playerX) <= dollhouseStopW) && !((bX + playerX) <= dollhouseStopX) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))){
+                        checkStepLevel2()
                     } else {
+                        if (playerX > 0) {
+                            playerX -= playerSpeed
+                            playerState = 'left';
+                            checkStepLevel2()
+                        }
+                    }
+                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY)) {
+                    if (playerX > 0) {
                         playerX -= playerSpeed
                         playerState = 'left';
                         checkStepLevel2()
                     }
-                } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY)) {
-                    playerX -= playerSpeed
-                    playerState = 'left';
-                    checkStepLevel2()
                 } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH)) {
-                    playerX -= playerSpeed
-                    playerState = 'left';
-                    checkStepLevel2()
+                    if (playerX > 0) {
+                        playerX -= playerSpeed
+                        playerState = 'left';
+                        checkStepLevel2()
+                    }
                 }
                 moving = true;
             } else if (((bY + playerY) < 450) && ((bX + playerX) > 1200)) {
@@ -1274,12 +1343,14 @@ function movePlayerLevelTwo() {
             } else if (bX <= 1200 && playerX > 400) {
                 
                 if (((bX + playerX + 50) >= dollhouseStopX) && ((bX + playerX + 25) <= dollhouseStopW) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))) {
+                    checkStepLevel2()
                 } else{
                     checkStepLevel2()
                     bX += playerSpeed
                 }
             } else if (playerX < 505) {
                 if (((bX + playerX + 50) >= dollhouseStopX) && ((bX + playerX + 25) < dollhouseStopW) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))) {
+                    checkStepLevel2()
                 } else{
                     checkStepLevel2()
                     playerX += playerSpeed
@@ -1295,17 +1366,19 @@ function movePlayerLevelTwo() {
 function lookForMouse() {
     let combinedX = playerX + bX;
     let combinedY = playerY + bY;
+    let startPlayerY = playerY
     let startbY = bY
-    catX = combinedX - 600;
-    catY = 650;
+    catX = bX - 200;
+    catY = 550;
     counter = 0
     const catComesOut = setInterval(() => {
         if (counter === 150) {
-            clearInterval(catComesOut)
             bY = startbY
+            playerY = startPlayerY
             caughtInHeadlights = false
             alreadyComing = false
             catComing = false
+            clearInterval(catComesOut)
         }
         if (bY < 450) bY += 10
         if (counter < 35) {
@@ -1330,10 +1403,11 @@ function getMouse() {
 
     let combinedX = playerX + bX;
     let combinedY = playerY + bY;
-    catX = combinedX - 600;
-    catY = 650;
+    catX = bX - 200;
+    catY = 550;
     if (showMouse && !behindTable) {
-        if (combinedY < 425 || ( combinedY < 585 && combinedX > 1450)) {
+       
+        if (combinedY < 450 || ( combinedY < 585 && combinedX > 1450)) {
             let hitEdge = false
             const catComesOut = setInterval(() => {
                 catComing = true
@@ -1348,8 +1422,7 @@ function getMouse() {
                     if (catX >= 1445) {
                         hitEdge = true
                     }
-                } else if (hitEdge && (catY - combinedY) < 100 && (catY - combinedY) > 10) {
-                    console.log('second')
+                } else if (hitEdge && (catY - combinedY) < 100 && (catY - combinedY) > 0) {
                     if (bY > 0 && catY < 500) {
                         bY -= 10
                         playerY += 10
@@ -1374,7 +1447,6 @@ function getMouse() {
                         sayWhenEaten()
                     }
                 } else if (hitEdge && combinedX <= 1400 && catY < 300 && (catY - combinedY) < 10) {
-                    console.log('third cat state')
                    if (bY > 0 && catY < 500) {
                         bY -= 10
                         playerY += 10
@@ -1391,7 +1463,6 @@ function getMouse() {
                         sayWhenEaten()
                     }
                 } else if (catX >= 1445 && combinedX-50 >= catX && catX < 1650 && hitEdge) {
-                    console.log('fouth cat state')
                     if (bY > 0 && catY < 500) {
                         bY -= 10
                         playerY += 10
@@ -1406,7 +1477,6 @@ function getMouse() {
                         sayWhenEaten()
                     }
                 } else if (catX >=1445 && combinedX < catX && catX < 1650 && hitEdge) {
-                    console.log('fifth cat state')
                     if (bY > 0 && catY < 500) {
                         bY -= 10
                         playerY += 10
@@ -1420,7 +1490,7 @@ function getMouse() {
                         sayWhenEaten()
                     }
                 } else if (hitEdge) {
-                    console.log('else')
+
                     if (bY > 0 && catY < 500) {
                         bY -= 10
                         playerY += 10
@@ -1452,7 +1522,7 @@ function getMouse() {
             const catComesOut = setInterval(() => {
                 
                 if (catState === 'eat_left' || catState === 'eat_right') clearInterval(catComesOut)
-                if (catX + 100 < combinedX) {
+                if (catX + 100 < combinedX && (bX > tableW || (combinedY + 30) < tableY || combinedX > tableW + 250)) {
                     if (catX +110 >= combinedX && catY + 50 >= combinedY && catY - 50 <= combinedY) {
                         
                         catState = 'eat_right'
@@ -1467,11 +1537,23 @@ function getMouse() {
                         
                         catState = 'run_right'
                         catX += catRunSpeed
-                        catY += 10
+                        if (catX > tableW) catY += 10
                     } else {
                         
                         catState = 'run_right'
                         catX += catRunSpeed
+                    }
+                } else{
+                    if (catX < combinedX) {
+                        catState = 'run_right'
+                        catX += catRunSpeed
+                    } else if (catY + catRunWidth - 50 < combinedY) {
+                        catState = 'down'
+                        catY += catRunSpeed
+                    } else {
+                        catState = 'eat_right'
+                        showMouse = false
+                        sayWhenEaten()
                     }
                 }
             }, 75);
@@ -1497,20 +1579,33 @@ function getMouse() {
     }
 }
 
-let cars = []
+let cars = [car1, car2, car3, car4, car5, car6]
 
 function hitCar(combinedX, combinedY) {
+    // console.log(combinedX)
+    // console.log(combinedY)
     let detected = false
     cars.forEach((car) => {
+        // console.log(car)
         if (
-            combinedX < car.x + car.width &&
-            combinedX + 30 > car.x &&
-            combinedY + 30 > car.y &&
-            combinedY < car.y + car.height
+            combinedX + 10 < car.x + car.width &&
+            combinedX + 35 > car.x &&
+            combinedY + 50 > car.y &&
+            combinedY + 18 < car.y + car.height
             ) {
                 detected = true
+                
+                // console.log(detected)
+                if (playerState === 'up' || playerState === 'left') {
+                  
+                    car.x -= 10
+                } else if (playerState === 'down' || playerState === 'right') {
+                  
+                    car.x += 10
+                }
         }
     })
+
     return detected
 }
 
@@ -1538,7 +1633,11 @@ function hitBell(combinedX, combinedY) {
 
 function sayWhenEaten() {
     if (!dialogShowing){
-        appendtoDialog(toSayLevelTwo.onLose[0].string)
+        if (!druggedFood) {
+            appendtoDialog(toSayLevelTwo.onLose[0].string)
+        } else {
+            appendtoDialog(toSayLevelTwo.sorOfWon[0].string)
+        }
         toggleDialog()
 
         setTimeout(() => {
