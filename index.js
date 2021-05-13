@@ -1646,9 +1646,13 @@ function sayWhenEaten() {
     }
 }
 
+let alreadyWon = false
+
 function levelTwoWin() {
     
-    if (winLevelTwo) {
+    let counterTwo = 0
+    if (winLevelTwo && !alreadyWon) {
+        alreadyWon = true
         const moveOver = setInterval(() =>{
             if (bX >= 1200 && bY >= 450) clearInterval(moveOver)
             if (bX < 1200) {
@@ -1657,27 +1661,26 @@ function levelTwoWin() {
                 bY += 10
                 playerY -=10
             }
-        }, 100)
+        }, 75)
         setTimeout(() =>{
-            let counter = 0
             const catComesOut = setInterval(() => {
                 if (catState === 'eat_food') clearInterval(catComesOut)
                 if (catX < 1400) {
                     catState = 'run_right'
                     catX += catRunSpeed
                     if (catY < 650) catY += 10
-                } else if (catX >= 1400 && counter < 70) {
+                } else if (catX >= 1400 && counterTwo < 69) {
                     catState = 'look_right'
                     catX += catLookSpeed
-                    counter++
-                } else if (catX >=1400 && catX < 1550 && counter >= 70) {
+                    counterTwo += 1
+                } else if (catX >=1400 && catX < 1550 && counterTwo >= 69) {
                     catState = 'slow_right'
                     catX += catSlowSpeed
                 } else {
                     catState = 'eat_food'
                 }
             }, 100);
-        }, 1000)
+        }, 750)
         setTimeout(() => {
             const runAway = setInterval(()=> {
                 if ((playerX + bX) >= 1575 && (playerY + bY) <= 120) {
@@ -1694,16 +1697,13 @@ function levelTwoWin() {
                     if ((playerX + bX - 25) >= 1380) {
                         showMouse = true
                     }
-                    // if (bY <= 0) {
-                    //     playerY += 10
-                    // }
                 } else if ((playerY + bY) > 120) {
                     playerState = 'up'
                     playerY -= playerSpeed
                 }
                 
             }, 50)
-        }, 18000);
+        }, 16000);
         setTimeout(() => {
             if (!dialogShowing){
             appendtoDialog(toSayLevelTwo.onWin[0].string)
@@ -1712,13 +1712,13 @@ function levelTwoWin() {
             setTimeout(() => {
                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
                 appendtoDialog(toSayLevelTwo.onWin[1].string)
-            }, 10000)
+            }, 8000)
             setTimeout(() => {
                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
                 appendtoDialog(toSayLevelTwo.onWin[2].string)
-            }, 20000)
+            }, 18000)
         }
-        }, 25000)
+        }, 20000)
     }
 }
 
