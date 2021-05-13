@@ -244,6 +244,7 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
 
 window.addEventListener('keydown', function(e) {
     keys[e.key] = true;
+    console.log(keys)
     moving = true
 })
 
@@ -314,8 +315,14 @@ function checkStep() {
     }
 }
 
+function restart() {
+    if (keys[' ']) {
+        gameRunning = false
+        clearLevelOne = false
+    }
+}
+
 function movePlayer() {
-    
     if (!dialogShowing && !clearLevelOne){
        
         if (playerY >= 445 && gameRunning) {
