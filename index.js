@@ -1029,15 +1029,14 @@ function checkStepLevel2() {
                 }, 3000)
                 let counter = 0;
                 const startTimer = setInterval(() => {
+                    
                     if ((!showMouse || behindTable) && !alreadyComing) {
                         alreadyComing = true
                         lookForMouse()
-                        caughtInHeadlights = true
                         clearInterval(startTimer)
                     } else if (counter > 8 && !alreadyComing) {
                         alreadyComing = true
                         getMouse()
-                        caughtInHeadlights = true
                         clearInterval(startTimer)
                     }
                     counter += 1
@@ -1104,12 +1103,10 @@ function checkStepLevel2() {
             if ((!showMouse || behindTable) && !alreadyComing) {
                 alreadyComing = true
                 lookForMouse()
-                caughtInHeadlights = true
                 clearInterval(startTimer)
             } else if (counter > 9 && !alreadyComing) {
                 alreadyComing = true
                 getMouse()
-                caughtInHeadlights = true
                 clearInterval(startTimer)
             }
             counter += 1
@@ -1179,12 +1176,10 @@ function checkStepLevel2() {
             if ((!showMouse || behindTable) && !alreadyComing) {
                 alreadyComing = true
                 lookForMouse()
-                caughtInHeadlights = true
                 clearInterval(startTimer)
             } else if (counter > 8 && !alreadyComing) {
                 alreadyComing = true
                 getMouse()
-                caughtInHeadlights = true
                 clearInterval(startTimer)
             }
             counter += 1
@@ -1210,7 +1205,6 @@ function checkStepLevel2() {
                 if (!showMouse) {
                     levelTwoWin()
                 } else {
-                    caughtInHeadlights = true
                     getMouse()
                 }
             }, 9000)
@@ -1310,20 +1304,20 @@ function movePlayerLevelTwo() {
                     if (((bX + playerX) <= dollhouseStopW) && !((bX + playerX) <= dollhouseStopX) && (((bY + playerY +30) > dollhouseStopY) && ((bY + playerY + 35) < dollhouseStopH))){
                         checkStepLevel2()
                     } else {
-                        if (playerX > 0) {
+                        if (playerX >= 0) {
                             playerX -= playerSpeed
                             playerState = 'left';
                             checkStepLevel2()
                         }
                     }
                 } else if (((playerX + bX) < tableW) && ((playerY + 25 + bY) < tableY)) {
-                    if (playerX > 0) {
+                    if (playerX >= 0) {
                         playerX -= playerSpeed
                         playerState = 'left';
                         checkStepLevel2()
                     }
                 } else if (((playerX + bX) < tableW) && ((playerY + bY + 11) >= tableH)) {
-                    if (playerX > 0) {
+                    if (playerX >= 0) {
                         playerX -= playerSpeed
                         playerState = 'left';
                         checkStepLevel2()
@@ -1364,10 +1358,12 @@ function movePlayerLevelTwo() {
 }
 
 function lookForMouse() {
+
     let combinedX = playerX + bX;
     let combinedY = playerY + bY;
     let startPlayerY = playerY
     let startbY = bY
+    caughtInHeadlights = true
     catX = bX - 200;
     catY = 550;
     counter = 0
@@ -1380,7 +1376,10 @@ function lookForMouse() {
             catComing = false
             clearInterval(catComesOut)
         }
-        if (bY < 450) bY += 10
+        if (bY < 450) {
+            bY += 10
+            playerY -= 10
+        }
         if (counter < 35) {
             catX += catRunSpeed
             catState = 'run_right'
@@ -1400,9 +1399,9 @@ function lookForMouse() {
 }
 
 function getMouse() {
-
     let combinedX = playerX + bX;
     let combinedY = playerY + bY;
+    caughtInHeadlights = true
     catX = bX - 200;
     catY = 550;
     if (showMouse && !behindTable) {
@@ -1410,7 +1409,7 @@ function getMouse() {
         if (combinedY < 450 || ( combinedY < 585 && combinedX > 1450)) {
             let hitEdge = false
             const catComesOut = setInterval(() => {
-                catComing = true
+              
                 if (catState === 'eat_left' || catState === 'eat_right') clearInterval(catComesOut)
                 if (!hitEdge) {
                     catState = 'run_right'
@@ -1518,7 +1517,7 @@ function getMouse() {
                 }
             }, 100);
         } else {
-            catComing = true
+       
             const catComesOut = setInterval(() => {
                 
                 if (catState === 'eat_left' || catState === 'eat_right') clearInterval(catComesOut)
