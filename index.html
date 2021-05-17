@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico?" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <title>Mouse on a Mission</title>
     <style>
         #cage {
@@ -14,9 +16,21 @@
         </style>
 </head>
 <body>
-    <div>
-        <p class='restart-instruction'>Press F5 to restart</p>
-        <p class='restart-instruction'>Use arrow keys</p>
+    <div class='controls'>
+        <canvas id="cage" width='600px' height="450px"></canvas>
+        <canvas id="level-two" width='1800px' height="900px"></canvas>
+        <div id='inst-holder'>
+            <p class='restart-instruction'>Press R to restart</p>
+            <p class='restart-instruction'>Use arrow keys to move</p>
+        </div>
+        <div id='desc-holder'>
+            <p class='description'>
+                Welcome! Your mission, should you choose to accept it, is to escape from your cage, drug the farmer's cat, and flee with your life intact.
+            </p>
+            <p class='description'>
+                Be aware! Once you leave the safety of the cage, DEATH stalks your every step. Avoid noisy obstacles until the time is right. Good luck, brave mouse!
+            </p>
+        </div>
     </div>
     <div>
     </div>
@@ -29,24 +43,16 @@
         <h2 class='in-timer'>Mouse on a Mission!</h2>
         <h2 id='timer'></h2>
     </div>
-    <canvas id="cage" width='600px' height="450px"></canvas>
-    <canvas id="level-two" width='1800px' height="900px"></canvas>
     <div id='skip-button-holder'>
         <h2 id='skip-button'>Skip</h2>
-    </div>
-    <footer>
-        <nav id='me-links'>
-            <p>About:</p>
-            <div>
-                <a href="https://www.linkedin.com/in/carol-twilight-bares-b4513694/" target="_blank">Linkedin</a>
-
-                <a href="https://github.com/Twiconoclast" target="_blank">Github</a>
-
-                <a href="https://angel.co/u/carrie-bares" target="_blank">AngelList</a>
-            </div>
-        </nav>
-    </footer>
     
+    <nav id='me-links'>
+        <p>About:</p>
+        <a href="https://www.linkedin.com/in/carol-twilight-bares-b4513694/" target="_blank"><i class="fab fa-linkedin"></i> Linkedin</a>
+        <a href="https://github.com/Twiconoclast" target="_blank"><i class="fab fa-github-square"></i> Github</a>
+        <a href="https://angel.co/u/carrie-bares" target="_blank"><i class="fab fa-angellist"></i> AngelList</a>
+    </nav>
+    </div>
     <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

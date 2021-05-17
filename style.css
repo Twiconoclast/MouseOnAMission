@@ -10,6 +10,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     background-color: #665355;
+    position: relative;
 }
 
 .hide {
@@ -103,9 +104,6 @@ p {
     text-align: center;
 }
 
-.restart-instruction {
-    width: 15%;
-}
 
 footer {
     align-self: baseline;
@@ -119,15 +117,53 @@ a {
     color: #A9A8A6;
 }
 
-.controls {
-    position: absolute;
-    z-index: 10;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#me-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 450px;
+    align-items: baseline;
+    /* position: absolute; */
 }
 
-.controls, select, option {
+#inst-holder {
+    position: absolute;
+    left: 82%;
+    padding-top: 20px;
+}
+
+.restart-instruction {
+    max-width: 40%;
+    z-index: 15;
+}
+
+#desc-holder {
+    position: absolute;
+    left: 6%;
+    padding-top: 28px;
+    margin: 0 auto;
+    max-width: 20%;
+}
+
+.description {
+    max-width: 60%;
+    font-size: 15px;
+}
+
+.controls {
+    position: absolute;
+    display: flex;
+    flex-direction: reverse;
+    min-width: 1000px;
+    min-height: 50%;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+}
+
+select, option {
     font-size: 25px;
 }
 
