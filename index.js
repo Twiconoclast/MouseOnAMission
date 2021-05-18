@@ -1740,11 +1740,9 @@ function getMouse() {
 let cars = [car1, car2, car3, car4, car5, car6]
 
 function hitCar(combinedX, combinedY) {
-    // console.log(combinedX)
-    // console.log(combinedY)
+
     let detected = false
     cars.forEach((car) => {
-        // console.log(car)
         if (
             combinedX + 10 < car.x + car.width &&
             combinedX + 35 > car.x &&
@@ -1753,7 +1751,6 @@ function hitCar(combinedX, combinedY) {
             ) {
                 detected = true
                 
-                // console.log(detected)
                 if (playerState === 'up' || playerState === 'left') {
                   
                     car.x -= 10
