@@ -1508,45 +1508,46 @@ function movePlayerLevelTwo() {
 let catComesOut
 
 function lookForMouse() {
-
-    let combinedX = playerX + bX;
-    let combinedY = playerY + bY;
-    let startPlayerY = playerY
-    let startbY = bY
-    caughtInHeadlights = true
-    catX = bX - 200;
-    catY = 550;
-    counter = 0
-    catComesOut = setInterval(() => {
-        if (counter === 150) {
-            bY = startbY
-            playerY = startPlayerY
-            caughtInHeadlights = false
-            alreadyComing = false
-            catComing = false
-            clearInterval(catComesOut)
-        }
-        if (bY < 450) {
-            bY += 10
-            playerY -= 10
-        }
-        if (counter < 35) {
-            catX += catRunSpeed
-            catState = 'run_right'
-        } else if (counter < 55) {
+    if (!alreadyWon) {
+        let combinedX = playerX + bX;
+        let combinedY = playerY + bY;
+        let startPlayerY = playerY
+        let startbY = bY
+        caughtInHeadlights = true
+        catX = bX - 200;
+        catY = 550;
+        counter = 0
+        catComesOut = setInterval(() => {
+            if (counter === 150) {
+                bY = startbY
+                playerY = startPlayerY
+                caughtInHeadlights = false
+                alreadyComing = false
+                catComing = false
+                clearInterval(catComesOut)
+            }
+            if (bY < 450) {
+                bY += 10
+                playerY -= 10
+            }
+            if (counter < 35) {
+                catX += catRunSpeed
+                catState = 'run_right'
+            } else if (counter < 55) {
+                
+                catState = 'look_right'
+            } else if (counter < 75) {
             
-            catState = 'look_right'
-        } else if (counter < 75) {
-        
-            if (counter === 75) catX += 100
-            catState = 'look_left'
-        } else if (counter < 150) {
-            catState = 'slow_left'
-            catX -= catSlowSpeed
-        }
-        counter += 1
-    }, 75)
-    // intervals.push(catComesOut)
+                if (counter === 75) catX += 100
+                catState = 'look_left'
+            } else if (counter < 150) {
+                catState = 'slow_left'
+                catX -= catSlowSpeed
+            }
+            counter += 1
+        }, 75)
+        // intervals.push(catComesOut)
+    }
 }
 
 let catComesOutGetMouse
@@ -1819,6 +1820,7 @@ function levelTwoWin() {
             if (bX >= 1200 && bY >= 450) clearInterval(moveOver)
             if (bX < 1200) {
                 bX += 10
+                playerX -= 10
             } else if (bY < 450) {
                 bY += 10
                 playerY -=10
@@ -1842,7 +1844,7 @@ function levelTwoWin() {
                 } else {
                     catState = 'eat_food'
                 }
-            }, 100);
+            }, 75);
             // intervals.push(catComesOutLevelTwoWin)
         }, 750)
         thirtyOne = setTimeout(() => {
@@ -1857,7 +1859,7 @@ function levelTwoWin() {
                 } 
                 if ((playerX + bX) <= 1575 && bY <= 650) {
                     playerState = 'right'
-                    playerX += playerSpeed
+                    playerX += (playerSpeed * 2)
                     if ((playerX + bX - 25) >= 1380) {
                         showMouse = true
                     }
@@ -1868,7 +1870,7 @@ function levelTwoWin() {
                 
             }, 50)
             // intervals.push(runAway)
-        }, 16000);
+        }, 12000);
         thirtyTwo = setTimeout(() => {
             if (!dialogShowing){
             appendtoDialog(toSayLevelTwo.onWin[0].string)
@@ -1877,14 +1879,14 @@ function levelTwoWin() {
             thirtyThree = setTimeout(() => {
                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
                 appendtoDialog(toSayLevelTwo.onWin[1].string)
-            }, 8000)
+            }, 7000)
             thirtyFour = setTimeout(() => {
                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
                 appendtoDialog(toSayLevelTwo.onWin[2].string)
-            }, 18000)
+            }, 16000)
             // timeOuts.push(thirtyThree, thirtyFour)
         }
-        }, 20000)
+        }, 18000)
         // timeOuts.push(thirty, thirtyOne, thirtyTwo)
     }
 }

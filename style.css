@@ -20,9 +20,14 @@ body {
 h2{
     background-color: #665355;
     color: #A9A8A6;
+    /* font-size: 30px; */
     /* width: 15%; */
     text-align: center;
     margin-top: 10px;
+}
+
+.in-timer {
+    font-size: 35px;
 }
 
 #timer-holder {
@@ -148,6 +153,11 @@ a {
 .description {
     max-width: 60%;
     font-size: 15px;
+}
+
+#welcome {
+    font-size: 25px;
+    font-weight: bold;
 }
 
 .controls {
