@@ -20,28 +20,31 @@
 </head>
 <body>
     <div class='controls'>
-        <canvas id="cage" width='600px' height="450px"></canvas>
-        <canvas id="level-two" width='1800px' height="900px"></canvas>
-        <div id='inst-holder'>
-            <p class='restart-instruction'>Press R to restart</p>
-            <p class='restart-instruction'>Use arrow keys to move</p>
-        </div>
-        <div id='desc-holder'>
-            <p class='description'>
-                <span id='welcome'>Welcome!</span> Your mission, should you choose to accept it, is to escape from your cage, drug the farmer's cat, and flee with your life intact.
-            </p>
-            <p class='description'>
-                Be aware! Once you leave the safety of the cage, DEATH stalks your every step. Avoid noisy obstacles until the time is right. Good luck, brave mouse!
-            </p>
+        <div id='side-holder'>
+            <canvas id="cage" width='600px' height="450px"></canvas>
+                <div id='talks-to-player' class='revealed first-box talks-to-player'>
+                    <h2>Mouse on a Mission!</h2>
+                    <p class='in-box'>Press any key to start</p>
+                    <p class='in-box'>Use arrow keys to move</p>
+                </div>
+            <canvas id="level-two" width='1800px' height="900px"></canvas>
+            <div id='inst-holder'>
+                <p class='restart-instruction'>Press R to restart</p>
+                <p class='restart-instruction'>Use arrow keys to move</p>
+            </div>
+            <div id='desc-holder'>
+                <p class='description'>
+                    <span id='welcome'>Welcome!</span> Your mission, should you choose to accept it, is to escape from your cage, drug the farmer's cat, and flee with your life intact.
+                </p>
+                <p class='description'>
+                    Be aware! Once you leave the safety of the cage, DEATH stalks your every step. Avoid noisy obstacles until the time is right. Good luck, brave mouse!
+                </p>
+            </div>
         </div>
     </div>
     <div>
     </div>
-    <div id='talks-to-player' class='revealed first-box'>
-        <h2>Mouse on a Mission!</h2>
-        <p class='in-box'>Press any key to start</p>
-        <p class='in-box'>Use arrow keys to move</p>
-    </div>
+    
     <div id='timer-holder' >
         <h2 class='in-timer'>Mouse on a Mission!</h2>
         <h2 id='timer'></h2>
