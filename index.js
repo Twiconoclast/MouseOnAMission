@@ -453,6 +453,10 @@ function movePlayer() {
                 playerState = 'down';
                 moving = true;
                 tubY += playerSpeed / 4;
+            } else if (playerX <= tubX+115) {
+                playerY += playerSpeed
+                playerState = 'down';
+                checkStep()
             } else if (playerY < 360) {
                 playerY += playerSpeed;
                 playerState = 'down';
