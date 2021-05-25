@@ -19,6 +19,6 @@ This section assigns state and plays dialog based on changes for the first level
 
 ### Architecture and Technologies
 
-This game uses Javascript, HTML, and CSS. Images were either made using GIMP, downloaded from opengameart.org, or both.
+This game uses JavaScript, HTML, and CSS. Images were either made using GIMP, downloaded from opengameart.org, or both.
 No installation is necessary.
 
