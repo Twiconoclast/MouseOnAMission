@@ -1,3 +1,7 @@
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+}
+
 let playerState = 'down';
 let gameRunning = false;
 let dialogShowing = true;
@@ -314,13 +318,10 @@ function checkStep() {
         case 'onFood':
             if (!hitFood(playerX, playerY)) state = 'inCage'
             break
-        case 'rightOfWater':
-            if (!hitWater(playerX, playerY)) state = 'inCage'
-            break
         case 'onGate':
             if (!hitGate(playerX, playerY)) state = 'inCage'
             break
-        // This statement checks the possible changes from the 'inCage' state
+        // This statement calls a function that checks the possible changes from the 'inCage' state
         case 'inCage': 
             // Plays the appropriate message when the player collides with the hay and does not have the needle
             // No action necessary for subsequent hits
@@ -373,7 +374,6 @@ function checkStep() {
                     }
                 }
             }
-    }
 }
 
 function hitFood(pX, pY) {
@@ -412,6 +412,7 @@ function hitHay(pX, pY) {
                 detected = true
         }
     return detected
+    }
 }
 
 function restart() {
@@ -496,7 +497,7 @@ function levelOneWin() {
         startAnimating()
         canvas.classList.add('hide')
     }, 6000)
-    // timeOuts.push(twelve)
+
 }
 
 let fps, fpsInterval, startTime, now, then, elapsed;
@@ -510,7 +511,7 @@ function startAnimating(fps){
 }
 // ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH)
 function animateLevelOne(){
-    // console.log('animating level one')
+
     if (!clearLevelOne) requestAnimationFrame(animateLevelOne);
     now = Date.now();
     elapsed = now - then;
@@ -879,7 +880,6 @@ function animateLevelTwo(){
             }
 
         }, 100)
-        // intervals.push(moveLeft)
         skipButton.classList.add("revealed")
         openLevelTwo = setInterval(() => {
                 if (counter === 1 || !multibox) clearInterval(openLevelTwo);
@@ -891,13 +891,10 @@ function animateLevelTwo(){
                 }, 3000)
                 counter++
             }, 10000)
-            // intervals.push(openLevelTwo)
-            // timeOuts.push(thirteen, fourteen)
             fifteen = setTimeout(() => {
                 if (dialogShowing && multibox) toggleDialog()
                 skipButton.classList.remove("revealed")
             }, 28000)
-            // timeOuts.push(fifteen)
             openingPlayed = true
     }
     ctxTwo.clearRect(0, 0, levelTwoWidth, levelTwoHeight);
@@ -979,8 +976,6 @@ function animateLevelTwo(){
     let playerFrameY = mouseActions[playerState].loc[position].y;
     catFrameX = catActions[catState].loc[catpos].x
     catFrameY = catActions[catState].loc[catpos].y
-    // console.log(catWidth)
-    // console.log(catFrameY)
     if (levelTwoRunning) ctxTwo.drawImage(images.levelTwoBackground, bX, bY, bW, bH, 0, 0, canvasTwo.width, canvasTwo.height)
     if (levelTwoRunning) ctxTwo.drawImage(bellImg, 0, 0, bellWidth, bellHeight, -(bX - bellX), -(bY - bellY), bellWidth, bellHeight)
     if (levelTwoRunning) ctxTwo.drawImage(images.bluecar, 0, 0, car1.width, car1.height, -(bX - car1.x), -(bY - car1.y), car1.width, car1.height)
@@ -999,8 +994,6 @@ function animateLevelTwo(){
     }
     
     if (!caughtInHeadlights && levelTwoRunning) movePlayerLevelTwo()
-    // if (movingCat = true) moveCat()
-    // if (moving === true) 
     gameFrame++;
 }
 
@@ -1132,229 +1125,432 @@ let startTimerTwo
 let startTimerThree
 
 let alreadyComing = false
+let stateLevel2 = 'onFloor'
+
 function checkStepLevel2() {
- 
     let combinedX = playerX + bX;
     let combinedY = playerY + bY;
-    // console.log(combinedX)
-    // console.log(combinedY)
-    if (!bellHitLeft && !bellHitRight) {
-        if (hitBell(combinedX, combinedY)) {
-            if (!dialogShowing){
-                appendtoDialog(toSayLevelTwo.bell[0].string)
-                toggleDialog()
-
-                sixteen = setTimeout(() => {
-                    if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                    appendtoDialog(toSayLevelTwo.bell[1].string)
-                }, 1500)
-                seventeen = setTimeout(() => {
-                    if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                    toggleDialog()
-                }, 3000)
-                let counter = 0;
-                startTimer = setInterval(() => {
-                    
-                    if ((!showMouse || behindTable) && !alreadyComing) {
-                        alreadyComing = true
-                        lookForMouse()
-                        clearInterval(startTimer)
-                    } else if (counter > 8 && !alreadyComing) {
-                        alreadyComing = true
-                        getMouse()
-                        clearInterval(startTimer)
-                    }
-                    counter += 1
-                }, 1000)
-            // intervals.push(startTimer)   
-            // timeOuts.push(sixteen, seventeen) 
-            catX = bX - 200    
-            catComing = true
-            } 
-        }
-    }
-
-    
-
+    let hittingCar = hitCar(combinedX, combinedY);
+    let hittingWoody = hitWoody(combinedX, combinedY);
+    let hittingDish = hitDish(combinedX, combinedY);
+    let hittingPacket = hitPacket(combinedX, combinedY)
+    hideMouse(combinedX, combinedY);
     if (combinedY >= 810 && combinedX <= 725) {
         behindTable = true
     } else {
         behindTable = false
     }
-    if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230 && druggedFood && !catComing) {
-        behindHouse = true
-    } else if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230  && druggedFood && catComing) {
-        behindHouse = true
-    } else if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230  && !druggedFood && catComing) {
+    if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230) {
         behindHouse = true
     } else {
         behindHouse = false
     }
-
-    if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComing) {
-        showMouse = false
-    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComing) {
-        showMouse = false
-    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComing) {
-        showMouse = false
-    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
+    if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
         showMouse = false
         winLevelTwo = true
         levelTwoWin()
-    } else {
-        showMouse = true
     }
 
-    let hittingCar = hitCar(combinedX, combinedY)
-    if (hittingCar && !letHitToyOnce && !alreadyHere) {
-        if (!dialogShowing) {
-            appendtoDialog(toSayLevelTwo.hitAToyOnce[0].string)
-            toggleDialog()
-            eighteen = setTimeout(() => {
-                while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                toggleDialog()
-                letHitToyOnce = true
-            }, 1000)
-            // timeOuts.push(eighteen)
-        }
-        alreadyHere = true
-    } else if (hittingCar && letHitToyOnce && !alreadyHere) {
-        let counter = 0
-        if (!dialogShowing) {
-            appendtoDialog(toSayLevelTwo.hitAToyTwice[0].string)
-            toggleDialog()
-            nineteen = setTimeout(() => {
-                while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                toggleDialog()
-            }, 1000)
-            // timeOuts.push(nineteen)
-            startTimerTwo = setInterval(() => {
-            if ((!showMouse || behindTable) && !alreadyComing) {
-                alreadyComing = true
-                lookForMouse()
-                clearInterval(startTimerTwo)
-            } else if (counter > 9 && !alreadyComing) {
-                alreadyComing = true
-                getMouse()
-                clearInterval(startTimerTwo)
-            }
-            counter += 1
-        }, 1000)
-        // intervals.push(startTimerTwo)
-        catX = bX - 200
-        catComing = true
-    }
-    alreadyHere = true
-    } else if (hittingCar) {
-        alreadyHere = true
-    } else if (combinedY <= 300 && combinedY >= 232 && combinedX >=1325 && combinedX <= 1400 && !alreadyHere && !gotPacket) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelTwo.packet[0].string)
-            toggleDialog()
-            twenty = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                }, 2500)
-            twentyOne = setTimeout(() => {
-                toggleDialog()
-            }, 2500)
-            // timeOuts.push(twenty, twentyOne)
-        }
-        gotPacket = true
-    } else if (combinedY >= 650 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1635 && !alreadyHere && !gotPacket) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelTwo.foodNoPacket[0].string)
-            toggleDialog()
-
-            twentyTwo = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                toggleDialog()
-            }, 2500)
-            // timeOuts.push(twentyTwo)
-        }
-    } else if (combinedY >= 650 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1635 && !alreadyHere && gotPacket && !druggedFood) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelTwo.foodWithPacket[0].string)
-            toggleDialog()
-
-            twentyThree = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                toggleDialog()
-            }, 3000)
-            // timeOuts.push(twentyThree)
-        }
-        druggedFood = true
-    } else if (combinedY >= 650 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1635) {
-        alreadyHere = true
-    } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && !druggedFood) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelTwo.hide[0].string)
-            toggleDialog()
-
-            twentyFour = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                appendtoDialog(toSayLevelTwo.hide[1].string)
-            }, 2500)
-            twentyFive = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                // appendtoDialog(toSayLevelTwo.hide[1].string)
-                toggleDialog()
-            }, 4000)
-            // timeOuts.push(twentyFour, twentyFive)
-        } 
-        let counter = 0;
-        startTimerThree = setInterval(() => {
-            if ((!showMouse || behindTable) && !alreadyComing) {
-                alreadyComing = true
-                lookForMouse()
-                clearInterval(startTimerThree)
-            } else if (counter > 8 && !alreadyComing) {
-                alreadyComing = true
-                getMouse()
-                clearInterval(startTimerThree)
-            }
-            counter += 1
-        }, 1000)
-        // intervals.push(startTimerThree)
-        catX = bX - 200
-        catComing = true
-    } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && druggedFood) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelTwo.hide[0].string)
-            toggleDialog()
-
-            twentySix = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                appendtoDialog(toSayLevelTwo.hide[1].string)
-            }, 2500)
-            twentySeven = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                // appendtoDialog(toSayLevelTwo.hide[1].string)
-                toggleDialog()
-            }, 4000)
-            twentyEight = setTimeout(() => {
-                if (!showMouse) {
-                    levelTwoWin()
-                } else {
-                    getMouse()
+    switch(stateLevel2) {
+        case 'hitBell':
+            stateLevel2 = 'onFloor'
+            break
+        case 'hitCar':
+            if (!hittingCar) stateLevel2 = 'onFloor'
+            break
+        case 'hitWoody':
+            if (!hittingWoody) stateLevel2 = 'onFloor'
+            break
+        case 'hitDish':
+            if (!hittingDish) stateLevel2 = 'onFloor'
+            break
+        case 'hitPacket':
+            if (!hittingPacket) stateLevel2 = 'onFloor'
+            break
+        case 'onFloor':
+            if (!bellHitLeft && !bellHitRight && hitBell(combinedX, combinedY)) {
+                stateLevel2 = 'hitBell'
+                if (!dialogShowing){
+                    appendtoDialog(toSayLevelTwo.bell[0].string)
+                    toggleDialog()
+                    sixteen = setTimeout(() => {
+                        if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                        appendtoDialog(toSayLevelTwo.bell[1].string)
+                    }, 1500)
+                    seventeen = setTimeout(() => {
+                        if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                        toggleDialog()
+                    }, 3000)
+                    let counter = 0;
+                    startTimer = setInterval(() => {
+                        if ((!showMouse || behindTable) && !alreadyComing) {
+                            alreadyComing = true
+                            lookForMouse()
+                            clearInterval(startTimer)
+                        } else if (counter > 8 && !alreadyComing) {
+                            alreadyComing = true
+                            getMouse()
+                            clearInterval(startTimer)
+                        }
+                        counter += 1
+                    }, 1000)
+                    catX = bX - 200    
+                    catComing = true
                 }
-            }, 9000)
-            // timeOuts.push(twentySix, twentySeven, twentyEight)
+            } else if (hittingCar && !letHitToyOnce) {
+                stateLevel2 = 'hitCar'
+                if (!dialogShowing) {
+                    appendtoDialog(toSayLevelTwo.hitAToyOnce[0].string)
+                    toggleDialog()
+                    eighteen = setTimeout(() => {
+                        while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                        toggleDialog()
+                        letHitToyOnce = true
+                    }, 1000)
+                }
+            } else if (hittingCar && letHitToyOnce) {
+                stateLevel2 = 'hitCar'
+                let counter = 0
+                if (!dialogShowing) {
+                    appendtoDialog(toSayLevelTwo.hitAToyTwice[0].string)
+                    toggleDialog()
+                    nineteen = setTimeout(() => {
+                        while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                        toggleDialog()
+                    }, 1000)
+                    startTimerTwo = setInterval(() => {
+                        if ((!showMouse || behindTable) && !alreadyComing) {
+                            alreadyComing = true
+                            lookForMouse()
+                            clearInterval(startTimerTwo)
+                        } else if (counter > 9 && !alreadyComing) {
+                            alreadyComing = true
+                            getMouse()
+                            clearInterval(startTimerTwo)
+                        }
+                        counter += 1
+                    }, 1000)
+                    catX = bX - 200
+                    catComing = true
+                }
+            } else if (hittingDish) {
+                stateLevel2 = 'hitDish'
+                if (gotPacket) {
+                    if (!dialogShowing){
+                        appendtoDialog(toSayLevelTwo.foodWithPacket[0].string)
+                        toggleDialog()
+                        twentyThree = setTimeout(() => {
+                            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                            toggleDialog()
+                        }, 3000)
+                    }
+                    druggedFood = true
+                } else {
+                    if (!dialogShowing){
+                        appendtoDialog(toSayLevelTwo.foodNoPacket[0].string)
+                        toggleDialog()
+                        twentyTwo = setTimeout(() => {
+                            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                            toggleDialog()
+                        }, 2500)
+ 
+                    }
+                }
+            } else if (hitPacket(combinedX, combinedY) && !gotPacket) {
+                stateLevel2 = 'hitPacket'
+                if (!dialogShowing){
+                    appendtoDialog(toSayLevelTwo.packet[0].string)
+                    toggleDialog()
+                    twenty = setTimeout(() => {
+                        if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                        }, 2500)
+                    twentyOne = setTimeout(() => {
+                        toggleDialog()
+                    }, 2500)
+                }
+                gotPacket = true
+            } else if (hittingWoody) {
+                stateLevel2 = 'hitWoody'
+                if (!druggedFood) {
+                    if (!dialogShowing){
+                        appendtoDialog(toSayLevelTwo.hide[0].string)
+                        toggleDialog()
+
+                        twentyFour = setTimeout(() => {
+                            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                            appendtoDialog(toSayLevelTwo.hide[1].string)
+                        }, 2500)
+                        twentyFive = setTimeout(() => {
+                            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                            toggleDialog()
+                        }, 4000)
+                    } 
+                    let counter = 0;
+                    startTimerThree = setInterval(() => {
+                        if ((!showMouse || behindTable) && !alreadyComing) {
+                            alreadyComing = true
+                            lookForMouse()
+                            clearInterval(startTimerThree)
+                        } else if (counter > 8 && !alreadyComing) {
+                            alreadyComing = true
+                            getMouse()
+                            clearInterval(startTimerThree)
+                        }
+                        counter += 1
+                    }, 1000)
+                    catX = bX - 200
+                    catComing = true
+                } else if (druggedFood) {
+                    if (!dialogShowing){
+                        appendtoDialog(toSayLevelTwo.hide[0].string)
+                        toggleDialog()
+
+                        twentySix = setTimeout(() => {
+                            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                            appendtoDialog(toSayLevelTwo.hide[1].string)
+                        }, 2500)
+                        twentySeven = setTimeout(() => {
+                            if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                            toggleDialog()
+                        }, 4000)
+                        twentyEight = setTimeout(() => {
+                            if (!showMouse) {
+                                levelTwoWin()
+                            } else {
+                                getMouse()
+                            }
+                        }, 9000)
+                    }
+                    catX = bX - 200
+                    catComing = true
+                }
+            }
         }
-        catX = bX - 200
-        catComing = true
-    // } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
-    //     alreadyHere = true
-    } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390) {
-        alreadyHere = true
-    }else {
-       alreadyHere = false
-    }
 }
+
+// function checkStepLevel2() {
+ 
+//     let combinedX = playerX + bX;
+//     let combinedY = playerY + bY;
+//     // console.log(combinedX)
+//     // console.log(combinedY)
+//     if (!bellHitLeft && !bellHitRight) {
+//         if (hitBell(combinedX, combinedY)) {
+//             if (!dialogShowing){
+//                 appendtoDialog(toSayLevelTwo.bell[0].string)
+//                 toggleDialog()
+
+//                 sixteen = setTimeout(() => {
+//                     if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                     appendtoDialog(toSayLevelTwo.bell[1].string)
+//                 }, 1500)
+//                 seventeen = setTimeout(() => {
+//                     if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                     toggleDialog()
+//                 }, 3000)
+//                 let counter = 0;
+//                 startTimer = setInterval(() => {
+                    
+//                     if ((!showMouse || behindTable) && !alreadyComing) {
+//                         alreadyComing = true
+//                         lookForMouse()
+//                         clearInterval(startTimer)
+//                     } else if (counter > 8 && !alreadyComing) {
+//                         alreadyComing = true
+//                         getMouse()
+//                         clearInterval(startTimer)
+//                     }
+//                     counter += 1
+//                 }, 1000)
+//             // intervals.push(startTimer)   
+//             // timeOuts.push(sixteen, seventeen) 
+//             catX = bX - 200    
+//             catComing = true
+//             } 
+//         }
+//     }
+
+    
+
+//     if (combinedY >= 810 && combinedX <= 725) {
+//         behindTable = true
+//     } else {
+//         behindTable = false
+//     }
+//     if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230 && druggedFood && !catComing) {
+//         behindHouse = true
+//     } else if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230  && druggedFood && catComing) {
+//         behindHouse = true
+//     } else if (combinedY <= 400 && combinedY >= 358 && combinedX >=1200 && combinedX  <= 1230  && !druggedFood && catComing) {
+//         behindHouse = true
+//     } else {
+//         behindHouse = false
+//     }
+
+//     if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComing) {
+//         showMouse = false
+//     } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComing) {
+//         showMouse = false
+//     } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComing) {
+//         showMouse = false
+//     } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
+//         showMouse = false
+//         winLevelTwo = true
+//         levelTwoWin()
+//     } else {
+//         showMouse = true
+//     }
+
+//     let hittingCar = hitCar(combinedX, combinedY)
+//     if (hittingCar && !letHitToyOnce && !alreadyHere) {
+//         if (!dialogShowing) {
+//             appendtoDialog(toSayLevelTwo.hitAToyOnce[0].string)
+//             toggleDialog()
+//             eighteen = setTimeout(() => {
+//                 while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 toggleDialog()
+//                 letHitToyOnce = true
+//             }, 1000)
+//             // timeOuts.push(eighteen)
+//         }
+//         alreadyHere = true
+//     } else if (hittingCar && letHitToyOnce && !alreadyHere) {
+//         let counter = 0
+//         if (!dialogShowing) {
+//             appendtoDialog(toSayLevelTwo.hitAToyTwice[0].string)
+//             toggleDialog()
+//             nineteen = setTimeout(() => {
+//                 while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 toggleDialog()
+//             }, 1000)
+//             // timeOuts.push(nineteen)
+//             startTimerTwo = setInterval(() => {
+//             if ((!showMouse || behindTable) && !alreadyComing) {
+//                 alreadyComing = true
+//                 lookForMouse()
+//                 clearInterval(startTimerTwo)
+//             } else if (counter > 9 && !alreadyComing) {
+//                 alreadyComing = true
+//                 getMouse()
+//                 clearInterval(startTimerTwo)
+//             }
+//             counter += 1
+//         }, 1000)
+//         // intervals.push(startTimerTwo)
+//         catX = bX - 200
+//         catComing = true
+//     }
+//     alreadyHere = true
+//     } else if (hittingCar) {
+//         alreadyHere = true
+//     } else if (combinedY <= 300 && combinedY >= 232 && combinedX >=1325 && combinedX <= 1400 && !alreadyHere && !gotPacket) {
+//         alreadyHere = true
+//         if (!dialogShowing){
+//             appendtoDialog(toSayLevelTwo.packet[0].string)
+//             toggleDialog()
+//             twenty = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 }, 2500)
+//             twentyOne = setTimeout(() => {
+//                 toggleDialog()
+//             }, 2500)
+//             // timeOuts.push(twenty, twentyOne)
+//         }
+//         gotPacket = true
+//     } else if (combinedY >= 650 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1635 && !alreadyHere && !gotPacket) {
+//         alreadyHere = true
+//         if (!dialogShowing){
+//             appendtoDialog(toSayLevelTwo.foodNoPacket[0].string)
+//             toggleDialog()
+
+//             twentyTwo = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 toggleDialog()
+//             }, 2500)
+//             // timeOuts.push(twentyTwo)
+//         }
+//     } else if (combinedY >= 650 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1635 && !alreadyHere && gotPacket && !druggedFood) {
+//         alreadyHere = true
+//         if (!dialogShowing){
+//             appendtoDialog(toSayLevelTwo.foodWithPacket[0].string)
+//             toggleDialog()
+
+//             twentyThree = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 toggleDialog()
+//             }, 3000)
+//             // timeOuts.push(twentyThree)
+//         }
+//         druggedFood = true
+//     } else if (combinedY >= 650 && combinedY <= 807 && combinedX <=1757 && combinedX >= 1635) {
+//         alreadyHere = true
+//     } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && !druggedFood) {
+//         alreadyHere = true
+//         if (!dialogShowing){
+//             appendtoDialog(toSayLevelTwo.hide[0].string)
+//             toggleDialog()
+
+//             twentyFour = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 appendtoDialog(toSayLevelTwo.hide[1].string)
+//             }, 2500)
+//             twentyFive = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 // appendtoDialog(toSayLevelTwo.hide[1].string)
+//                 toggleDialog()
+//             }, 4000)
+//             // timeOuts.push(twentyFour, twentyFive)
+//         } 
+//         let counter = 0;
+//         startTimerThree = setInterval(() => {
+//             if ((!showMouse || behindTable) && !alreadyComing) {
+//                 alreadyComing = true
+//                 lookForMouse()
+//                 clearInterval(startTimerThree)
+//             } else if (counter > 8 && !alreadyComing) {
+//                 alreadyComing = true
+//                 getMouse()
+//                 clearInterval(startTimerThree)
+//             }
+//             counter += 1
+//         }, 1000)
+//         // intervals.push(startTimerThree)
+//         catX = bX - 200
+//         catComing = true
+//     } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390 && !alreadyHere && druggedFood) {
+//         alreadyHere = true
+//         if (!dialogShowing){
+//             appendtoDialog(toSayLevelTwo.hide[0].string)
+//             toggleDialog()
+
+//             twentySix = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 appendtoDialog(toSayLevelTwo.hide[1].string)
+//             }, 2500)
+//             twentySeven = setTimeout(() => {
+//                 if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+//                 // appendtoDialog(toSayLevelTwo.hide[1].string)
+//                 toggleDialog()
+//             }, 4000)
+//             twentyEight = setTimeout(() => {
+//                 if (!showMouse) {
+//                     levelTwoWin()
+//                 } else {
+//                     getMouse()
+//                 }
+//             }, 9000)
+//             // timeOuts.push(twentySix, twentySeven, twentyEight)
+//         }
+//         catX = bX - 200
+//         catComing = true
+//     // } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
+//     //     alreadyHere = true
+//     } else if (combinedY >= 585 && combinedY <= 630 && combinedX <=1503 && combinedX >= 1390) {
+//         alreadyHere = true
+//     }else {
+//        alreadyHere = false
+//     }
+// }
 
 function movePlayerLevelTwo() {
     
@@ -1773,6 +1969,62 @@ function hitBell(combinedX, combinedY) {
                 }
         }
     return detected
+}
+
+function hitPacket(combinedX, combinedY) {
+
+    let detected = false
+        if (
+            combinedX <= 1325 + 75 &&
+            combinedX >= 1325 &&
+            combinedY >= 232 &&
+            combinedY <= 232 + 68
+            ) {
+                detected = true
+        }
+    return detected
+}
+
+function hitWoody(combinedX, combinedY) {
+    let detected = false
+        if (
+            combinedX <= 1390 + 113 &&
+            combinedX >= 1390 &&
+            combinedY >= 585 &&
+            combinedY <= 585 + 45
+            ) {
+                detected = true
+        }
+    return detected
+}
+
+function hitDish(combinedX, combinedY) {
+    let detected = false
+        if (
+            combinedX <= 1635 + 122 &&
+            combinedX >= 1635 &&
+            combinedY >= 650 &&
+            combinedY <= 650 + 157
+            ) {
+                detected = true
+        }
+    return detected
+}
+
+function hideMouse(combinedX, combinedY) {
+    if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380 && !druggedFood && !catComing) {
+        showMouse = false
+    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && !druggedFood && catComing) {
+        showMouse = false
+    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && !catComing) {
+        showMouse = false
+    } else if (combinedY <= 470 && combinedY + 25 >= 364 && combinedX + 25 >=1272 && combinedX - 25 <= 1380  && druggedFood && catComing) {
+        showMouse = false
+        winLevelTwo = true
+        levelTwoWin()
+    } else {
+        showMouse = true
+    }
 }
 
 function sayWhenEaten() {

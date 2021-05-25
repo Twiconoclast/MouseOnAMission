@@ -11,8 +11,11 @@ body {
     justify-content: space-between;
     background-color: #292841;
     position: relative;
+    transform-origin: center;
     transform: scale(1.5);
 }
+
+
 
 .hide {
     display: none;
@@ -180,6 +183,7 @@ a {
     transform: translate(-50%, -50%);
     font-size: 20px;
 }
+
 
 select, option {
     font-size: 25px;
