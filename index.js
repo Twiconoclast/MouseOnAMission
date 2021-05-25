@@ -303,135 +303,120 @@ window.addEventListener('keyup', function(e) {
 
 let alreadyHere = false
 
+let state = 'inCage'
+// This function is called when the player moves and performs actions based on change of state
 function checkStep() {
+    switch (state) {
+        // First set of case statements check whether the player has moved away from an object
+        case 'onHay':
+            if (!hitHay(playerX, playerY)) state = 'inCage'
+            break
+        case 'onFood':
+            if (!hitFood(playerX, playerY)) state = 'inCage'
+            break
+        case 'rightOfWater':
+            if (!hitWater(playerX, playerY)) state = 'inCage'
+            break
+        case 'onGate':
+            if (!hitGate(playerX, playerY)) state = 'inCage'
+            break
+        // This statement checks the possible changes from the 'inCage' state
+        case 'inCage': 
+            // Plays the appropriate message when the player collides with the hay and does not have the needle
+            // No action necessary for subsequent hits
+            if (hitHay(playerX, playerY) && !hasNeedle) {
+                state = 'onHay'
+                if (!dialogShowing){
+                    appendtoDialog(toSayLevelOne.haystack[0].string)
+                    toggleDialog()
+                    six = setTimeout(() => {
+                        if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
+                    }, 4000)
+                    seven = setTimeout(() => {
+                        appendtoDialog(toSayLevelOne.haystack[1].string)
+                    }, 4000)
+                    eight = setTimeout(() => {
+                        toggleDialog()
+                    }, 8000)
+                }
+                hasNeedle = true
+            // Plays the appropriate message when the player collides with the food
+            } else if (hitFood(playerX, playerY)) {
+                state = 'onFood'
+                if (!dialogShowing){
+                    appendtoDialog(toSayLevelOne.food[0].string)
+                    toggleDialog()
 
-    if (playerY <= 110 && playerY >= 42 && playerX >=24 && playerX <= 96 && !alreadyHere) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelOne.food[0].string)
-            toggleDialog()
-
-            five = setTimeout(() => {
-                toggleDialog()
-            }, 4000)
-            // timeOuts.push(five)
-        }
-    } else if (playerY <= 110 && playerY >= 42 && playerX >=24 && playerX <= 96) {
-        alreadyHere = true
-    } else if (playerY <= 110 && playerY >= 68 && playerX >=360 && playerX <= 474 && !alreadyHere && !hasNeedle) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelOne.haystack[0].string)
-            toggleDialog()
-            six = setTimeout(() => {
-                if (dialogShowing) while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-                }, 4000)
-            seven = setTimeout(() => {
-                appendtoDialog(toSayLevelOne.haystack[1].string)
-            }, 4000)
-            eight = setTimeout(() => {
-                toggleDialog()
-            }, 8000)
-            // timeOuts.push(six, seven, eight)
-        }
-        hasNeedle = true
-    } else if (playerY <= 110 && playerY >= 68 && playerX >=360 && playerX <= 474) {
-        alreadyHere = true
-     } else if (playerY <= 248 && playerY >= 200 && playerX >=525 && playerX && !alreadyHere && !hasNeedle) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelOne.cageNoNeedle[0].string)
-            toggleDialog()
-
-            nine = setTimeout(() => {
-                toggleDialog()
-            }, 4000)
-            // timeOuts.push(nine)
-        }
-    } else if (playerY <= 248 && playerY >= 200 && playerX >=525 && !alreadyHere && hasNeedle) {
-        alreadyHere = true
-        if (!dialogShowing){
-            appendtoDialog(toSayLevelOne.cageWithNeedle[0].string)
-            toggleDialog()
-
-            ten = setTimeout(() => {
-                toggleDialog()
-            }, 5000)
-            // timeOuts.push(ten)
-        }
-        hasNeedle = true
-    } else if (playerY <= 248 && playerY >= 200 && playerX >=525) {
-        alreadyHere = true
-    }else {
-        alreadyHere = false
+                    five = setTimeout(() => {
+                        toggleDialog()
+                    }, 4000)
+                }
+            // Plays the appropriate message when the player collides with the gate
+            } else if (hitGate(playerX, playerY)) {
+                state = 'onGate'
+                // a different dialog will play depending on whether the player has acquired the needle
+                if (!hasNeedle) {
+                    if (!dialogShowing){
+                        appendtoDialog(toSayLevelOne.cageNoNeedle[0].string)
+                        toggleDialog()
+                        nine = setTimeout(() => {
+                            toggleDialog()
+                        }, 4000)
+                    }
+                } else if (hasNeedle) {
+                    if (!dialogShowing){
+                        appendtoDialog(toSayLevelOne.cageWithNeedle[0].string)
+                        toggleDialog()
+                        ten = setTimeout(() => {
+                            toggleDialog()
+                        }, 5000)
+                    }
+                }
+            }
     }
+}
+
+function hitFood(pX, pY) {
+    let detected = false
+        if (
+            pX < 24 + 72 &&
+            pX > 24 &&
+            pY > 42 &&
+            pY < 42 + 68
+            ) {
+                detected = true
+        }
+    return detected
+}
+
+function hitGate(pX, pY) {
+    let detected = false
+        if (
+            pX >= 525 &&
+            pY >= 200 &&
+            pY <= 200 + 48
+            ) {
+                detected = true
+        }
+    return detected
+}
+
+function hitHay(pX, pY) {
+    let detected = false
+        if (
+            pX < 360 + 114 &&
+            pX > 360 &&
+            pY + 15 > 68 &&
+            pY  - 30 < 68 + 42
+            ) {
+                detected = true
+        }
+    return detected
 }
 
 function restart() {
     if (keys['r'] || keys['R']) {
         window.location.reload()
-        // clearLevelOne = false;
-        // levelTwoRunning = false;
-        // canvas.classList.remove('hide')
-        // ctxTwo.clearRect(0, 0, levelTwoWidth, levelTwoHeight);
-        // intervals.forEach((int) => clearInterval(int))
-        // timeOuts.forEach((time) => clearTimeout(time))
-        // playerX = 300;
-        // playerY = 200;
-        // car1.x = 885;
-        // car1.y = 630
-        // car2.x = 1035;
-        // car2.y = 690;
-        // car3.x = 1015;
-        // car3.y = 770;
-        // car4.x = 925;
-        // car4.y = 545;
-        // car5.x = 795;
-        // car5.y = 540
-        // car6.x = 875;
-        // car6.y = 835
-        // tubX = 0
-        // tubY = 260
-        // bX = 300;
-        // bY = 450;
-        // playerState = 'down';
-        // gameRunning = false;
-        // dialogShowing = true;
-        // timeLeft = 300000;
-        // timerMinutes = '05';
-        // timerSeconds = '00';
-        // timer.innerHTML = timerMinutes + ':' + timerSeconds;
-        // timeOut = false;
-        // multibox = false;
-        // hasNeedle = false;
-        // openingPlayed = false;
-        // neverAgain = false;
-        // winLevelTwo = false;
-        // gotPacket = false;
-        // letHitToyOnce = false;
-        // druggedFood = false;
-        // showMouse = true;
-        // catComing = false;
-        // behindTable = false;
-        // caughtInHeadlights = false;
-        // behindHouse = false;
-        // alreadyComing = false;
-        // alreadyWon = false;
-        // while (dialog.firstChild) { dialog.removeChild(dialog.firstChild); }
-        // firstBoxH2 = document.createElement('H2')
-        // startInst = document.createElement('P')
-        // moveInst = document.createElement('P')
-        // firstBoxH2.innerHTML = 'Mouse on a Mission!'
-        // startInst.innerHTML = 'Press any key to start'
-        // startInst.classList.add('in-box')
-        // moveInst.innerHTML = 'Use arrow keys to move'
-        // moveInst.classList.add('in-box')
-        // dialog.classList.add("first-box")
-        // dialog.appendChild(firstBoxH2)
-        // dialog.appendChild(startInst)
-        // dialog.appendChild(moveInst)
-        // dialog.classList.add("revealed")
-        // animateLevelOne()
     }
 }
 
