@@ -9,15 +9,29 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #665355;
+    background-color: #292841;
+    position: relative;
+    transform-origin: center;
+    transform: scale(1.5);
+}
+
+
+
+.hide {
+    display: none;
 }
 
 h2{
-    background-color: #665355;
+    background-color: #292841;
     color: #A9A8A6;
+    /* font-size: 30px; */
     /* width: 15%; */
     text-align: center;
     margin-top: 10px;
+}
+
+.in-timer {
+    font-size: 35px;
 }
 
 #timer-holder {
@@ -39,8 +53,8 @@ h2{
     /* position: absolute; */
     height: 25px;
     width: 60px;
-    background-color: black;
-    color: whitesmoke;
+    background-color: #292841;
+    color: #A9A8A6;
     z-index: 10;
     /* top: 25%;
     left: 66.5%; */
@@ -51,20 +65,63 @@ h2{
     transition: all .3s ease-out;
 }
 
-p {
-    background-color: #665355;
-    color: #A9A8A6;
-    /* width: 15%; */
-    text-align: center;
+#skip-button-holder {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 930%);
+    width: 600px;
+    height: 25px;
+    padding: 0 5px;
+    margin: 0 0;
 }
 
-.restart-instruction {
-    width: 15%;
+#skip-button {
+    /* position: absolute; */
+    height: 25px;
+    width: 60px;
+
+    color: #A9A8A6;
+    z-index: 10;
+    /* top: 25%;
+    left: 66.5%; */
+    /* transform: translate(-50%, -50%); */
+    /* font-family: sans-serif; */
+    display: inline-block;
+    border-radius: 2px;
+    transition: all .3s ease-out;
+    opacity: 0;
 }
+
+#skip-button.revealed {
+    opacity: 1;
+    cursor: pointer;
+}
+
+p {
+    background-color: #292841;
+    color: #A9A8A6;
+    /* width: 15%; */
+    text-align: left;
+}
+
+.in-box {
+    text-align: center;
+    background-color: #665355;
+}
+
+.in-box-h2 {
+    background-color: #665355;
+}
+
 
 footer {
     align-self: baseline;
-    background-color: #665355;
+
     color: #A9A8A6;
     text-decoration: none;
 }
@@ -74,15 +131,61 @@ a {
     color: #A9A8A6;
 }
 
-.controls {
-    position: absolute;
-    z-index: 10;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#me-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 450px;
+    align-items: baseline;
+    /* position: absolute; */
 }
 
-.controls, select, option {
+#inst-holder {
+    position: absolute;
+    left: 82%;
+
+    padding-top: 20px;
+}
+
+.restart-instruction {
+    max-width: 40%;
+    z-index: 15;
+}
+
+#desc-holder {
+    position: absolute;
+    left: 6%;
+
+    padding-top: 28px;
+    margin: 0 auto;
+    max-width: 20%;
+}
+
+.description {
+    max-width: 60%;
+    font-size: 15px;
+}
+
+#welcome {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.controls {
+    position: absolute;
+    display: flex;
+    flex-direction: reverse;
+    min-width: 1000px;
+    min-height: 450px;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+}
+
+
+select, option {
     font-size: 25px;
 }
 
@@ -103,19 +206,34 @@ a {
     width: 600px;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    background-image: url(tiles_scaled.jpg);
+    background-image: url(grey_tiles.jpg);
+}
+
+#level-two {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* height: 450px;
+    width: 600px; */
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background: none;
 }
 
 #talks-to-player {
+    
     opacity: 0;
-    background-color: blanchedalmond;
-    border-radius: 5px;
-    border: 2px solid brown;
+    
 }
 
 #talks-to-player.revealed {
+    background-color: #E2E2E2;
+    border-radius: 5px;
+    border: 2px solid #7991AA;
+    padding-left: 5px;
+    padding-right: 5px; 
     position:absolute;
-    top: 35%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: 1;
@@ -140,4 +258,10 @@ a {
 
 #talks-to-player span.revealed {
     opacity: 1;
+}
+
+#side-holder {
+    width: 100%;
+    min-height: 100%;
+    position: relative;
 }
